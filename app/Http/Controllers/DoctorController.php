@@ -7,9 +7,10 @@ use Illuminate\Http\Request;
 
 class DoctorController extends Controller
 {
-
+    
     public function index()
     {
+        echo "Doctors\n";
         // Retrieve all doctors
         $doctors = Doctors::all();
 
@@ -32,6 +33,7 @@ class DoctorController extends Controller
     {
         $data = $request->validate([
             'name' => 'required',
+            'email' => 'required',
             'specialization' => 'required',
         ]);
 
