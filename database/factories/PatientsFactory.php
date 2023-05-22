@@ -25,9 +25,8 @@ class PatientsFactory extends Factory
         return [
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
-            'email_verified_at' => now(),
+            
             'illness' => $this->faker->words(10, true),
-            'remember_token' => Str::random(10),
         ];
     }
 

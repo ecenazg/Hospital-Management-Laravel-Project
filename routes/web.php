@@ -4,20 +4,26 @@ use App\Http\Controllers\DoctorController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PatientController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+// Route for displaying the doctor management interface
+Route::get('/doctors', [DoctorController::class, 'index']);
 
+// Route for creating a new doctor
+Route::post('/doctors', [DoctorController::class, 'createDoctor']);
 
-Route::get('/', [DoctorController::class, 'index']);
-Route::get('/', [PatientController::class, 'index']);
+// Route for updating a doctor
+Route::put('/doctors/{id}', [DoctorController::class, 'update']);
+
+// Route for deleting a doctor
+Route::delete('/doctors/{id}', [DoctorController::class, 'destroy']);
+
+Route::get('/patients', [PatientController::class, 'index']);
+Route::post('/patients', [PatientController::class, 'createPatient']);
+Route::put('/patients/{id}', [PatientController::class, 'update']);
+Route::delete('/patients/{id}', [PatientController::class, 'destroy']);
+
+//Route::get('/', [DoctorController::class, 'index']);
+
+//Route::get('/', [PatientController::class, 'index']);
 
 //Route::get('/', [PatientController::class, 'index']);
 //Route::get('/create', [DoctorController::class, 'createDoctor']);
