@@ -21,6 +21,16 @@ Route::post('/patients', [PatientController::class, 'createPatient']);
 Route::put('/patients/{id}', [PatientController::class, 'update']);
 Route::delete('/patients/{id}', [PatientController::class, 'destroy']);
 
+
+
+
+Route::get('/departments', [DepartmentController::class, 'index']);
+Route::post('/departments', [DepartmentController::class, 'createDepartment']);
+Route::put('/departments/{id}', [DepartmentController::class, 'update']);
+Route::delete('/departments/{id}', [DepartmentController::class, 'destroy']);
+
+
+
 //Route::get('/', [DoctorController::class, 'index']);
 
 //Route::get('/', [PatientController::class, 'index']);
