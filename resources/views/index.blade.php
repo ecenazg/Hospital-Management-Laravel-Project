@@ -12,22 +12,26 @@
         </ul>
     </nav>
 
-    <h1>Welcome to the Hospital</h1>
-
+    <h1>Welcome to the ECE's Hospital</h1>
+    <h2>The #1 hospital service in Ankara</h2>
     <div class="content">
-        <!-- Add your homepage content here -->
+    
+        
+        <img src="https://m.media-amazon.com/images/M/MV5BMTcyOTIyMjg5N15BMl5BanBnXkFtZTcwNDc1Nzc0NA@@._V1_.jpg" alt="Hospital Image">
+    
     </div>
 
     <style>
         /* CSS styles */
         body {
-            background-color: #f2f2f2;
+            background-color: #ffdfdf;
             font-family: Arial, sans-serif;
+            color: #680747;
         }
 
         .navbar {
-            background-color: #333;
-            color: #fff;
+            background-color: #f12b6b;
+            color: #35013f;
             padding: 10px;
         }
 
@@ -43,7 +47,7 @@
         }
 
         .navbar ul li a {
-            color: #fff;
+            color: #35013f;
             text-decoration: none;
         }
 

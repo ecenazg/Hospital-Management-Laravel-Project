@@ -5,13 +5,13 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
+            background-color: #cbbcf6;
             margin: 0;
             padding: 20px;
         }
         
         h1 {
-            color: #333;
+            color: #512b58;
             text-align: center;
             margin-bottom: 20px;
         }
@@ -23,7 +23,7 @@
         }
         
         th, td {
-            border: 1px solid #ccc;
+            border: 1px solid #35013f;
             padding: 10px;
             text-align: left;
         }
@@ -71,7 +71,6 @@
             margin-top: 5px;
         }
     </style>
-
 </head>
 <body>
     <h1>Doctor Management</h1>
@@ -92,19 +91,26 @@
                 @foreach($doctors as $doctor)
                     <tr>
                         <td>{{ $doctor->id }}</td>
-                        <td>{{ $doctor->name }}</td>
-                        <td>{{ $doctor->email }}</td>
-                        <td>{{ $doctor->specialization }}</td>
-                        <td contenteditable="true" class="edit-field">{{ $doctor->name }}</td>
-                    <td contenteditable="true" class="edit-field">{{ $doctor->email }}</td>
-                    <td contenteditable="true" class="edit-field">{{ $doctor->specialization }}</td>
-                    <td>
-                        <button class="edit-button" data-doctor-id="{{ $doctor->id }}">Edit</button>
-                        <form class="delete-form" action="{{ route('doctors.destroy', $doctor->id) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit">Delete</button>
-                        </form>
+                        <td>
+                            <span>{{ $doctor->name }}</span>
+                            <input type="text" class="edit-field" value="{{ $doctor->name }}" style="display: none;">
+                        </td>
+                        <td>
+                            <span>{{ $doctor->email }}</span>
+                            <input type="text" class="edit-field" value="{{ $doctor->email }}" style="display: none;">
+                        </td>
+                        <td>
+                            <span>{{ $doctor->specialization }}</span>
+                            <input type="text" class="edit-field" value="{{ $doctor->specialization }}" style="display: none;">
+                        </td>
+                        <td>
+                            <button class="edit-button">Edit</button>
+                            <button class="save-button" style="display: none;">Save</button>
+                            <form class="delete-form" action="{{ route('doctors.destroy', $doctor->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit">Delete</button>
+                            </form>
                         </td>
                     </tr>
                 @endforeach
@@ -129,82 +135,82 @@
 
         <button type="submit">Create</button>
     </form>
-    @verbatim
+
     <script>
-       
+        document.addEventListener('DOMContentLoaded', () => {
+  const editButtons = document.querySelectorAll('.edit-button');
+  const saveButtons = document.querySelectorAll('.save-button');
+  const editFields = document.querySelectorAll('.edit-field');
+  const spans = document.querySelectorAll('td span');
 
-// Get all edit buttons and attach click event listeners
-const editButtons = document.querySelectorAll('.edit-button');
-editButtons.forEach(button => {
-    button.addEventListener('click', handleEdit);
-});
-
-// Handle the edit button click event
-function handleEdit(event) {
-    const doctorId = event.target.dataset.doctorId;
-    const editFields = document.querySelectorAll(`tr[data-doctor-id="${doctorId}"] .edit-field`);
-
-    // Enable editing on the fields
-    editFields.forEach(field => {
-        field.contentEditable = true;
-        field.classList.add('editing');
+  editButtons.forEach((button, index) => {
+    button.addEventListener('click', () => {
+      spans[index].style.display = 'none';
+      editFields[index * 3].style.display = 'inline-block';
+      editFields[index * 3 + 1].style.display = 'inline-block';
+      editFields[index * 3 + 2].style.display = 'inline-block';
+      editButtons[index].style.display = 'none';
+      saveButtons[index].style.display = 'inline-block';
     });
+  });
 
-    // Change the button text to 'Save'
-    event.target.textContent = 'Save';
-    event.target.removeEventListener('click', handleEdit);
-    event.target.addEventListener('click', handleSave);
-}
+  saveButtons.forEach((button, index) => {
+    button.addEventListener('click', () => {
+      const doctorId = button.parentElement.parentElement.querySelector('td:first-child').textContent;
+      const formData = new FormData();
+      const name = editFields[index * 3].value;
+      const email = editFields[index * 3 + 1].value;
+      const specialization = editFields[index * 3 + 2].value;
 
-// Handle the save button click event
-function handleSave(event) {
-    const doctorId = event.target.dataset.doctorId;
-    const editFields = document.querySelectorAll(`tr[data-doctor-id="${doctorId}"] .edit-field`);
+      formData.append('name', name);
+      formData.append('email', email);
+      formData.append('specialization', specialization);
 
-    // Disable editing on the fields
-    editFields.forEach(field => {
-        field.contentEditable = false;
-        field.classList.remove('editing');
+      fetch(`/doctors/${doctorId}`, {
+        method: 'PUT',
+        body: formData,
+        headers: {
+          'X-CSRF-TOKEN': '{{ csrf_token() }}',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      })
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error('Failed to save changes.');
+          }
+        })
+        .then(data => {
+          // Assuming you have a <tbody> element with the id "doctor-table-body"
+          const doctorTableRow = document.getElementById(`doctor-row-${doctorId}`);
+          doctorTableRow.innerHTML = `
+            <td>${doctorId}</td>
+            <td><span>${data.name}</span></td>
+            <td><span>${data.email}</span></td>
+            <td><span>${data.specialization}</span></td>
+            <td>
+              <button class="edit-button">Edit</button>
+              <button class="save-button" style="display: none;">Save</button>
+            </td>
+          `;
+
+          // Rebind the event listeners to the newly created edit and save buttons
+          const newEditButton = doctorTableRow.querySelector('.edit-button');
+          const newSaveButton = doctorTableRow.querySelector('.save-button');
+          const newEditFields = doctorTableRow.querySelectorAll('.edit-field');
+          newEditButton.addEventListener('click', handleEdit);
+          newSaveButton.addEventListener('click', handleSave);
+          newEditFields.forEach(field => {
+            field.addEventListener('input', handleInputChange);
+          });
+        })
+        .catch(error => {
+          console.error('An error occurred while saving changes:', error);
+        });
     });
-
-    // Change the button text back to 'Edit'
-    event.target.textContent = 'Edit';
-    event.target.removeEventListener('click', handleSave);
-    event.target.addEventListener('click', handleEdit);
-
-    // Save the changes
-    const formData = new FormData();
-    editFields.forEach(field => {
-        const columnName = field.getAttribute('data-column-name');
-        const columnValue = field.textContent;
-        formData.append(columnName, columnValue);
-    });
-
-    fetch(`/doctors/${doctorId}`, {
-        method: 'PUT', 
-        body: formData
-    })
-    .then(response => {
-        if (response.ok) {
-            console.log('Changes saved successfully.');
-        } else {
-            console.error('Failed to save changes.');
-        }
-    })
-    .catch(error => {
-        console.error('An error occurred while saving changes:', error);
-    });
-}
-
-// Prevent form submission on delete confirmation
-const deleteForms = document.querySelectorAll('.delete-form');
-deleteForms.forEach(form => {
-    form.addEventListener('submit', event => {
-        const confirmation = confirm('Are you sure you want to delete this doctor?');
-        if (!confirmation) {
-            event.preventDefault();
-        }
-    });
+  });
 });
 
     </script>

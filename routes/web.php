@@ -12,7 +12,7 @@ Route::get('/', function () {
 
 Route::get('/doctors', [DoctorController::class, 'index']);
 Route::post('/doctors/createDoctor', [DoctorController::class, 'createDoctor'])->name('doctors.create');
-//Route::match(['put', 'delete'], '/doctors/{id}', [DoctorController::class, 'edit'])->name('doctors.edit');
+Route::put('/doctors/{id}', [DoctorController::class, 'edit'])->name('doctors.edit');
 Route::delete('/doctors/{id}', [DoctorController::class, 'destroy'])->name('doctors.destroy');
 
 Route::get('/patients', [PatientController::class, 'index']);
