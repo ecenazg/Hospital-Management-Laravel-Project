@@ -13,9 +13,9 @@ class PatientController extends Controller
     {
         echo "Patients\n";
         // Retrieve all patients
-        $patient = Patients::all();
+        $patients = Patients::all();
 
-        return response()->json($patient);
+        return view('patients', ['patients' => $patients]);
     }
 
     public function createPatient(Request $request)
@@ -27,10 +27,12 @@ class PatientController extends Controller
         ]);
 
         $patient = Patients::create($request->only('name', 'email' , 'illness'));
-        return response()->json($patient, 201);
+        $patients = Patients::orderBy('id', 'asc')->get();
+        return redirect('/patients')->with('success', 'Patient created successfully.');
+
     }
 
-    public function update(Request $request, int $id)
+    public function edit(Request $request, int $id)
     {
         $data = $request->validate([
             'name' => 'required',
@@ -39,7 +41,7 @@ class PatientController extends Controller
         ]);
 
         $patient = Patients::findOrFail($id);
-        $patient->update($request->only('name', 'email' , 'illness'));
+        $patient->edit($request->only('name', 'email' , 'illness'));
 
         return response()->json($patient);
     }
@@ -50,6 +52,10 @@ class PatientController extends Controller
         $patient = Patients::findOrFail($id);
         $patient->delete();
 
-        return response()->json(null, 204);
+        // Get the remaining patients in increasing order of their IDs
+        $patients = Patients::orderBy('id', 'asc')->get();
+
+        // Redirect back to the index page with the updated patient list
+        return redirect('/patients')->with('patients', $patients)->with('success', 'Patient deleted successfully.');
     }
 }

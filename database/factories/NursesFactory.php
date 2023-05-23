@@ -1,17 +1,19 @@
-<?
+<?php
+ 
 namespace Database\Factories;
 
-use App\Models\Departments;
+use App\Models\Nurse;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class DepartmentsFactory extends Factory
+
+class NursesFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Departments::class;
+    protected $model = Nurse::class;
 
     /**
      * Define the model's default state.
@@ -21,8 +23,13 @@ class DepartmentsFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->unique()->word,
-            'description' => $this->faker->sentence,
+            'name' => $this->faker->name(),
+            'email' => $this->faker->unique()->safeEmail(),
+            'department' => $this->faker->words(1, true),
+            
         ];
     }
+
+    
 }
+

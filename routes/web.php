@@ -3,39 +3,27 @@
 use App\Http\Controllers\DoctorController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\NurseController;
 
-// Route for displaying the doctor management interface
 Route::get('/doctors', [DoctorController::class, 'index']);
+Route::post('/doctors/createDoctor', [DoctorController::class, 'createDoctor'])->name('doctors.create');
 
-// Route for creating a new doctor
-Route::post('/doctors', [DoctorController::class, 'createDoctor']);
+//Route::match(['put', 'delete'], '/doctors/{id}', [DoctorController::class, 'edit'])->name('doctors.edit');
 
-// Route for updating a doctor
-Route::put('/doctors/{id}', [DoctorController::class, 'update']);
+Route::delete('/doctors/{id}', [DoctorController::class, 'destroy'])->name('doctors.destroy');
 
-// Route for deleting a doctor
-Route::delete('/doctors/{id}', [DoctorController::class, 'destroy']);
+
 
 Route::get('/patients', [PatientController::class, 'index']);
-Route::post('/patients', [PatientController::class, 'createPatient']);
-Route::put('/patients/{id}', [PatientController::class, 'update']);
-Route::delete('/patients/{id}', [PatientController::class, 'destroy']);
+Route::post('/patients/createPatient', [PatientController::class, 'createPatient'])->name('patients.create');
+//Route::put('/patients/{id}', [PatientController::class, 'update']);
+Route::delete('/patients/{id}', [PatientController::class, 'destroy'])->name('patients.destroy');
 
+Route::get('/nurses', [NurseController::class, 'index']);
+Route::post('/nurses/createNurse', [NurseController::class, 'createNurse'])->name('nurse.create');
+Route::put('/nurses/edit{id}', [NurseController::class, 'update']);
+Route::delete('/nurses/{id}', [NurseController::class, 'destroy'])->name('nurse.destroy');
 
-
-
-Route::get('/departments', [DepartmentController::class, 'index']);
-Route::post('/departments', [DepartmentController::class, 'createDepartment']);
-Route::put('/departments/{id}', [DepartmentController::class, 'update']);
-Route::delete('/departments/{id}', [DepartmentController::class, 'destroy']);
-
-
-
-//Route::get('/', [DoctorController::class, 'index']);
-
-//Route::get('/', [PatientController::class, 'index']);
-
-//Route::get('/', [PatientController::class, 'index']);
-//Route::get('/create', [DoctorController::class, 'createDoctor']);
 
 

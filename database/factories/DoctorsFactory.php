@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Doctors;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
+
 
 class DoctorsFactory extends Factory
 {
@@ -25,7 +25,6 @@ class DoctorsFactory extends Factory
         return [
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
-            
             'specialization' => $this->faker->words(10, true),
             
         ];

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 class DoctorController extends Controller
 {
+
     
     public function index()
     {
@@ -14,7 +15,7 @@ class DoctorController extends Controller
         // Retrieve all doctors
         $doctors = Doctors::all();
 
-        return response()->json($doctors);
+        return view('doctors', ['doctors' => $doctors]);
     }
 
     public function createDoctor(Request $request)
@@ -26,10 +27,12 @@ class DoctorController extends Controller
         ]);
 
         $doctor = Doctors::create($request->only('name', 'email' , 'specialization'));
-        return response()->json($doctor, 201);
+        
+        $doctors = Doctors::orderBy('id', 'asc')->get();
+        return redirect('/doctors')->with('success', 'Doctor created successfully.');
     }
 
-    public function update(Request $request, int $id)
+    public function edit(Request $request, int $id)
     {
         $data = $request->validate([
             'name' => 'required',
@@ -38,7 +41,7 @@ class DoctorController extends Controller
         ]);
 
         $doctor = Doctors::findOrFail($id);
-        $doctor->update($request->only('name', 'email' , 'specialization'));
+        $doctor->edit($request->only('name', 'email' , 'specialization'));
 
         return response()->json($doctor);
     }
@@ -49,6 +52,8 @@ class DoctorController extends Controller
         $doctor = Doctors::findOrFail($id);
         $doctor->delete();
 
-        return response()->json(null, 204);
+        $doctors = Doctors::orderBy('id', 'asc')->get();
+
+        return redirect('/doctors')->with('success', 'Doctor deleted successfully.');
     }
 }
