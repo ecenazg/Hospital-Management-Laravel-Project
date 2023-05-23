@@ -26,7 +26,7 @@ class PatientsFactory extends Factory
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
             
-            'illness' => $this->faker->words(10, true),
+            'illness' => $this->faker->words(3, true),
         ];
     }
 

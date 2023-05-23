@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Nurse;
+
+use App\Models\Nurses;
 use Illuminate\Http\Request;
 
 class NurseController extends Controller
@@ -13,7 +14,7 @@ class NurseController extends Controller
     {
         echo "Nurses\n";
         // Retrieve all doctors
-        $nurses = Nurse::all();
+        $nurses = Nurses::all();
 
         return view('nurses', ['nurses' => $nurses]);
     }
@@ -26,9 +27,9 @@ class NurseController extends Controller
             'department' => 'required',
         ]);
 
-        $nurse = Nurse::create($request->only('name', 'email' , 'department'));
+        $nurse = Nurses::create($request->only('name', 'email' , 'department'));
         
-        $nurses = Nurse::orderBy('id', 'asc')->get();
+        $nurses = Nurses::orderBy('id', 'asc')->get();
         return redirect('/nurses')->with('success', 'Nurse created successfully.');
     }
 
@@ -40,7 +41,7 @@ class NurseController extends Controller
             'department' => 'required',
         ]);
 
-        $nurse = Nurse::findOrFail($id);
+        $nurse = Nurses::findOrFail($id);
         $nurse->edit($request->only('name', 'email' , 'department'));
 
         return response()->json($nurse);
@@ -49,10 +50,10 @@ class NurseController extends Controller
     public function destroy(int $id)
     {
         // Delete a specific nurse
-        $nurse = Nurse::findOrFail($id);
+        $nurse = Nurses::findOrFail($id);
         $nurse->delete();
 
-        $nurses = Nurse::orderBy('id', 'asc')->get();
+        $nurses = Nurses::orderBy('id', 'asc')->get();
 
         return redirect('/nurses')->with('success', 'NUrses deleted successfully.');
     }

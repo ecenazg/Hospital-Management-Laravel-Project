@@ -2,6 +2,8 @@
 <html>
 <head>
     <title>Doctor Management</title>
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+
 </head>
 <body>
     <h1>Doctor Management</h1>

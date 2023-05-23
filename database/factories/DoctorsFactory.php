@@ -25,7 +25,7 @@ class DoctorsFactory extends Factory
         return [
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
-            'specialization' => $this->faker->words(10, true),
+            'specialization' => $this->faker->words(2, true),
             
         ];
     }
