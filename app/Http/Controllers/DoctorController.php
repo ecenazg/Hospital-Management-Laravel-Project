@@ -40,11 +40,17 @@ class DoctorController extends Controller
             'specialization' => 'required',
         ]);
 
-        $doctor = Doctors::findOrFail($id);
-        $doctor->edit($request->only('name', 'email' , 'specialization'));
-
-        return response()->json($doctor);
-    }
+       
+            $doctor = Doctors::findOrFail($id);
+            $doctor->name = $request->input('name');
+            $doctor->email = $request->input('email');
+            $doctor->specialization = $request->input('specialization');
+            $doctor->save();
+        
+            return response()->json(['message' => 'Doctor updated successfully']);
+        }
+        
+    
 
     public function destroy(int $id)
     {
