@@ -47,7 +47,13 @@ class DoctorController extends Controller
             $doctor->specialization = $request->input('specialization');
             $doctor->save();
         
-            return response()->json(['message' => 'Doctor updated successfully']);
+            return response()->json([
+                'message' => 'Doctor updated successfully',
+                'name' => $doctor->name,
+                'email' => $doctor->email,
+                'specialization' => $doctor->specialization
+            ]);
+            
         }
         
     
