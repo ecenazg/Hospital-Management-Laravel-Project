@@ -35,15 +35,23 @@ class PatientController extends Controller
     public function edit(Request $request, int $id)
     {
         $data = $request->validate([
-            'name' => 'required',
-            'illness' => 'required',
+            'name' => 'required', 
             'email' => 'required',
+            'illness' => 'required',
         ]);
 
         $patient = Patients::findOrFail($id);
-        $patient->edit($request->only('name', 'email' , 'illness'));
+            $patient->name = $request->input('name');
+            $patient->email = $request->input('email');
+            $patient->illness = $request->input('illness');
+            $patient->save();
 
-        return response()->json($patient);
+        return response()->json([
+            'message' => 'Patient updated successfully',
+            'name' => $patient->name,
+            'email' => $patient->email,
+            'illness' => $patient->illness
+        ]);
     }
 
     public function destroy(int $id)

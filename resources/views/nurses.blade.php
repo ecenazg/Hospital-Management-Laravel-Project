@@ -88,18 +88,29 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($nurses as $nurse)
-                    <tr>
-                        <td>{{ $nurse->id }}</td>
-                        <td>{{ $nurse->name }}</td>
-                        <td>{{ $nurse->email }}</td>
-                        <td>{{ $nurse->department }}</td>
-                        <td>
-                            <form action="{{ route('nurses.destroy', $nurse->id) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit">Delete</button>
-                            </form>
+            @foreach($nurses as $nurse)
+            <tr id="nurse-row-{{ $nurse->id }}">
+                <td>{{ $nurse->id }}</td>
+                <td>
+                    <span>{{ $nurse->name }}</span>
+                    <input type="text" class="edit-field" value="{{ $nurse->name }}" style="display: none;">
+                </td>
+                <td>
+                    <span>{{ $nurse->email }}</span>
+                    <input type="text" class="edit-field" value="{{ $nurse->email }}" style="display: none;">
+                </td>
+                <td>
+                    <span>{{ $nurse->department }}</span>
+                    <input type="text" class="edit-field" value="{{ $nurse->department }}" style="display: none;">
+                </td>
+                <td>
+                    <button class="edit-button">Edit</button>
+                    <button class="save-button" style="display: none;">Save</button>
+                    <form class="delete-form" action="{{ route('nurses.destroy', $nurse->id) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit">Delete</button>
+                    </form>
                         </td>
                     </tr>
                 @endforeach
@@ -124,5 +135,69 @@
 
         <button type="submit">Create</button>
     </form>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const editButtons = document.querySelectorAll('.edit-button');
+            const saveButtons = document.querySelectorAll('.save-button');
+            const editFields = document.querySelectorAll('.edit-field');
+            const spans = document.querySelectorAll('td span');
+
+            const handleEdit = (index) => {
+                spans[index].style.display = 'none';
+                editFields[index * 3].style.display = 'inline-block';
+                editFields[index * 3 + 1].style.display = 'inline-block';
+                editFields[index * 3 + 2].style.display = 'inline-block';
+                editButtons[index].style.display = 'none';
+                saveButtons[index].style.display = 'inline-block';
+            };
+
+            const handleSave = (nurseId, index) => {
+                const formData = new FormData();
+                const name = editFields[index * 3].value;
+                const email = editFields[index * 3 + 1].value;
+                const department = editFields[index * 3 + 2].value;
+
+                formData.append('name', name);
+                formData.append('email', email);
+                formData.append('department', department);
+
+                fetch(`/nurses/${nurseId}`, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        },
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            location.reload(); // Refresh 
+                            throw new Error('Failed to save changes.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('An error occurred while saving changes:', error);
+                    });
+            };
+
+            const handleInputChange = (event) => {
+                // Input değişikliklerini takip etmek için 
+            };
+
+            editButtons.forEach((button, index) => {
+                button.addEventListener('click', () => handleEdit(index));
+            });
+
+            saveButtons.forEach((button, index) => {
+                button.addEventListener('click', () => {
+                    const nurseId = button.parentElement.parentElement.querySelector('td:first-child').textContent;
+                    handleSave(nurseId, index);
+                });
+            });
+
+            editFields.forEach(field => {
+                field.addEventListener('input', handleInputChange);
+            });
+        });
+    </script>
 </body>
 </html>

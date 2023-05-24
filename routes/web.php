@@ -17,12 +17,12 @@ Route::delete('/doctors/{id}', [DoctorController::class, 'destroy'])->name('doct
 
 Route::get('/patients', [PatientController::class, 'index']);
 Route::post('/patients/createPatient', [PatientController::class, 'createPatient'])->name('patients.create');
-//Route::put('/patients/{id}', [PatientController::class, 'update']);
+Route::post('/patients/{id}', [PatientController::class, 'edit'])->name('patients.edit');
 Route::delete('/patients/{id}', [PatientController::class, 'destroy'])->name('patients.destroy');
 
 Route::get('/nurses', [NurseController::class, 'index']);
 Route::post('/nurses/createNurse', [NurseController::class, 'createNurse'])->name('nurses.create');
-Route::put('/nurses/edit{id}', [NurseController::class, 'edit']);
+Route::post('/nurses/{id}', [NurseController::class, 'edit'])->name('nurses.edit');
 Route::delete('/nurses/{id}', [NurseController::class, 'destroy'])->name('nurses.destroy');
 
 

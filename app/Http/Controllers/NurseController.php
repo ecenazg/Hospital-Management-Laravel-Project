@@ -42,10 +42,19 @@ class NurseController extends Controller
         ]);
 
         $nurse = Nurses::findOrFail($id);
-        $nurse->edit($request->only('name', 'email' , 'department'));
 
+        $nurse->name = $request->input('name');
+        $nurse->email = $request->input('email');
+        $nurse->department = $request->input('department');
+        $nurse->save();
+    
         $nurses = Nurses::orderBy('id', 'asc')->get();
-        return redirect('/nurses')->with('success', 'Nurse updated successfully.');
+        return response()->json([
+            'message' => 'Nurse updated successfully',
+            'name' => $nurse->name,
+            'email' => $nurse->email,
+            'department' => $nurse->department,
+        ]);
     }
 
     public function destroy(int $id)
