@@ -12,7 +12,7 @@ Route::get('/', function () {
 
 Route::get('/doctors', [DoctorController::class, 'index']);
 Route::post('/doctors/createDoctor', [DoctorController::class, 'createDoctor'])->name('doctors.create');
-Route::put('/doctors/{id}', [DoctorController::class, 'edit'])->name('doctors.edit');
+Route::post('/doctors/{id}', [DoctorController::class, 'edit'])->name('doctors.edit');
 Route::delete('/doctors/{id}', [DoctorController::class, 'destroy'])->name('doctors.destroy');
 
 Route::get('/patients', [PatientController::class, 'index']);
@@ -22,7 +22,7 @@ Route::delete('/patients/{id}', [PatientController::class, 'destroy'])->name('pa
 
 Route::get('/nurses', [NurseController::class, 'index']);
 Route::post('/nurses/createNurse', [NurseController::class, 'createNurse'])->name('nurses.create');
-Route::put('/nurses/edit{id}', [NurseController::class, 'update']);
+Route::put('/nurses/edit{id}', [NurseController::class, 'edit']);
 Route::delete('/nurses/{id}', [NurseController::class, 'destroy'])->name('nurses.destroy');
 
 
