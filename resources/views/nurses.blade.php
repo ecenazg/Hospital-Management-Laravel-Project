@@ -5,13 +5,13 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
+            background-color: #e9eab4;
             margin: 0;
             padding: 20px;
         }
         
         h1 {
-            color: #333;
+            color: #388e3c;
             text-align: center;
             margin-bottom: 20px;
         }
@@ -23,13 +23,13 @@
         }
         
         th, td {
-            border: 1px solid #ccc;
+            border: 1px solid #b7b56e;
             padding: 10px;
             text-align: left;
         }
         
         th {
-            background-color: #f2f2f2;
+            background-color: #ed9728;
         }
         
         table p {
@@ -55,7 +55,7 @@
         }
         
         button[type="submit"] {
-            background-color: #007bff;
+            background-color: #388e3c;
             color: #fff;
             border: none;
             padding: 5px 10px;
@@ -63,7 +63,7 @@
         }
         
         button[type="submit"]:hover {
-            background-color: #0056b3;
+            background-color: #388e3c;
         }
         
         .error-message {
