@@ -11,10 +11,11 @@ use App\Models\Patients;
 class ManagementController extends Controller
 {
     public function index()
-    {
-        // Return the view for the management page
-        return view('management.index');
-    }
+{
+    // Return the view for the management page
+    return view('management');
+}
+
 
     public function createDoctor(Request $request)
     {
