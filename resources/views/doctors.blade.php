@@ -123,21 +123,6 @@
     <p>No doctors found.</p>
     @endif
 
-    <!-- Create doctor form -->
-    <h2>Create Doctor</h2>
-    <form action="{{ route('doctors.create') }}" method="POST">
-        @csrf
-        <label for="name">Name:</label>
-        <input type="text" name="name" required><br>
-
-        <label for="email">Email:</label>
-        <input type="email" name="email" required><br>
-
-        <label for="specialization">Specialization:</label>
-        <input type="text" name="specialization" required><br>
-
-        <button type="submit">Create</button>
-    </form>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {

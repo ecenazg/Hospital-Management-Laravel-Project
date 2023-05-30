@@ -11,7 +11,12 @@ class Nurses extends Model
     protected $fillable = [
         'name',
         'email',
-        'department'
+        'department_name'
     ];
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class, 'department_name', 'department_name');
+    }
 
 }
