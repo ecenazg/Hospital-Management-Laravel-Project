@@ -13,6 +13,12 @@ class Doctors extends Model
     protected $fillable = [
         'name',
         'specialization',
+        'department_name',
         'email'
+        
     ];
+    public function department()
+    {
+        return $this->belongsTo(Department::class, 'department_name', 'department_name');
+    }
 }
