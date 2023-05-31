@@ -33,7 +33,7 @@ Route::post('/management/create-nurse', [ManagementController::class, 'createNur
 
 
 Route::get('/departments', [DepartmentController::class, 'index'])->name('department.index');
-Route::get('/departments/{id}/doctors', [DepartmentController::class, 'showDoctors'])->name('department.showDoctors');
+Route::get('/department/{departmentId}/doctors', [DepartmentController::class, 'fetchDoctors'])->name('department.doctors');
 
 
 

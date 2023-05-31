@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace App\Http\Controllers;
 
@@ -9,15 +9,26 @@ class DepartmentController extends Controller
 {
     public function index()
     {
+        // Retrieve all departments
         $departments = Department::all();
 
-        return view('departments', compact('departments'));
+        return view('department', ['departments' => $departments]);
     }
 
     public function showDoctors($id)
     {
-        $selectedDepartment = Department::findOrFail($id);
+        // Find the department by ID
+        $department = Department::find($id);
 
-        return view('departments', compact('selectedDepartment'));
+        // Check if the department exists
+        if (!$department) {
+            return redirect()->back()->with('error', 'Department not found.');
+        }
+
+        // Get the doctors of the department
+        $doctors = $department->doctors;
+
+        return view('department.doctors', ['department' => $department, 'doctors' => $doctors]);
     }
 }
+

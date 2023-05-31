@@ -15,9 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email');
-            $table->string('department');
+            $table->string('department_name');
             $table->timestamps();
         });
+
+        
     }
 
     /**
