@@ -10,6 +10,7 @@
             <li><a href="{{ url('/doctors') }}">Doctors</a></li>
             <li><a href="{{ url('/nurses') }}">Nurses</a></li>
             <li><a href="{{ url('/management') }}">Management</a></li>
+            <li><a href="{{ url('/departments') }}">Departments</a></li> <!-- Added Departments link -->
         </ul>
     </nav>
 

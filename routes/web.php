@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\NurseController;
 use App\Http\Controllers\ManagementController;
+use App\Http\Controllers\DepartmentController;
 
 
 
@@ -29,6 +30,11 @@ Route::get('/management', [ManagementController::class, 'index']);
 Route::post('/management/create-patient', [ManagementController::class, 'createPatient'])->name('management.createPatient');
 Route::post('/management/create-doctor', [ManagementController::class, 'createDoctor'])->name('management.createDoctor');
 Route::post('/management/create-nurse', [ManagementController::class, 'createNurse'])->name('management.createNurse');
+
+
+Route::get('/departments', [DepartmentController::class, 'index'])->name('department.index');
+Route::get('/departments/{id}/doctors', [DepartmentController::class, 'showDoctors'])->name('department.showDoctors');
+
 
 
 
