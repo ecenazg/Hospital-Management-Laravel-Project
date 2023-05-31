@@ -11,7 +11,6 @@ class DoctorController extends Controller
     
     public function index()
     {
-        echo "Doctors\n";
         // Retrieve all doctors
         $doctors = Doctors::all();
 
