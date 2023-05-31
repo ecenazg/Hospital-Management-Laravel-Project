@@ -17,16 +17,15 @@
     <h1>Departments</h1>
 
     @foreach ($departments as $department)
-    <button class="department-button" onclick="showDoctors('{{ $department->id }}')">{{ $department->name }}</button>
-
+        <button class="department-button" onclick="showDoctors('{{ $department->department_name }}')">{{ $department->department_name }}</button>
     @endforeach
 
     <div id="doctors-container"></div>
 
     <script>
-        function showDoctors($id) {
+        function showDoctors(department_name) {
             // Send an AJAX request to fetch the doctors of the department
-            fetch(`/department/${id}/doctors`)
+            fetch(`/departments/${department_name}/doctors`)
                 .then(response => response.text())
                 .then(data => {
                     document.getElementById('doctors-container').innerHTML = data;
@@ -35,3 +34,4 @@
     </script>
 </body>
 </html>
+

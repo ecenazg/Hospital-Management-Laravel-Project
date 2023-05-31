@@ -14,21 +14,21 @@ class DepartmentController extends Controller
 
         return view('department', ['departments' => $departments]);
     }
-
-    public function showDoctors($id)
+    public function showDoctors($department_name)
     {
-        // Find the department by ID
-        $department = Department::find($id);
+        // Departmanı adına göre bul
+        $department = Department::where('department_name', $department_name)->first();
 
-        // Check if the department exists
         if (!$department) {
+            
             return redirect()->back()->with('error', 'Department not found.');
         }
 
-        // Get the doctors of the department
+        // Departmana ait doktorları al
         $doctors = $department->doctors;
 
         return view('department.doctors', ['department' => $department, 'doctors' => $doctors]);
     }
+
 }
 
