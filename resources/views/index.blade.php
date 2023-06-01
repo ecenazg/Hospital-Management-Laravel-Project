@@ -2,23 +2,7 @@
 <html>
 <head>
     <title>Hospital Management</title>
-</head>
-<body>
-    <nav class="navbar">
-        <ul>
-            <li><a href="{{ url('/patients') }}">Patients</a></li>
-            <li><a href="{{ url('/doctors') }}">Doctors</a></li>
-            <li><a href="{{ url('/nurses') }}">Nurses</a></li>
-            <li><a href="{{ url('/management') }}">Management</a></li>
-            <li><a href="{{ url('/departments') }}">Departments</a></li> <!-- Added Departments link -->
-        </ul>
-    </nav>
-
-    <h1>Welcome to the ECE's Hospital</h1>
-    <h2>The #1 hospital service in Ankara</h2>
-    <div class="content">
-        <img src="https://m.media-amazon.com/images/M/MV5BMTcyOTIyMjg5N15BMl5BanBnXkFtZTcwNDc1Nzc0NA@@._V1_.jpg" alt="Hospital Image">
-    </div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.2.3/dist/morph/bootstrap.min.css">
 
     <style>
         /* CSS styles */
@@ -63,5 +47,25 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
     </style>
+</head>
+<body>
+    <nav class="navbar">
+        <ul>
+            <li><a href="{{ url('/patients') }}">Patients</a></li>
+            <li><a href="{{ url('/doctors') }}">Doctors</a></li>
+            <li><a href="{{ url('/nurses') }}">Nurses</a></li>
+            <li><a href="{{ url('/management') }}">Management</a></li>
+            <li><a href="{{ url('/departments') }}">Departments</a></li> <!-- Added Departments link -->
+        </ul>
+    </nav>
+
+    <h1>Welcome to the ECE's Hospital</h1>
+    <h2>The #1 hospital service in Ankara</h2>
+    <div class="content">
+        <img src="https://m.media-amazon.com/images/M/MV5BMTcyOTIyMjg5N15BMl5BanBnXkFtZTcwNDc1Nzc0NA@@._V1_.jpg" alt="Hospital Image">
+    </div>
+    
+    
+    
 </body>
 </html>

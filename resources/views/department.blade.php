@@ -23,9 +23,9 @@
     <div id="doctors-container"></div>
 
     <script>
-        function showDoctors(department_name) {
+        function showDoctors(departmentName) {
             // Send an AJAX request to fetch the doctors of the department
-            fetch(`/departments/${department_name}/doctors`)
+            fetch(`/department/${departmentName}/doctors`)
                 .then(response => response.text())
                 .then(data => {
                     document.getElementById('doctors-container').innerHTML = data;
@@ -34,4 +34,3 @@
     </script>
 </body>
 </html>
-

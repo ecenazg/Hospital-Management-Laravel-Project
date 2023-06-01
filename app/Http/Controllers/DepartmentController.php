@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Department;
+use App\Models\Doctors;
 use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
@@ -15,20 +16,21 @@ class DepartmentController extends Controller
         return view('department', ['departments' => $departments]);
     }
     public function showDoctors($department_name)
-    {
-        // Departmanı adına göre bul
-        $department = Department::where('department_name', $department_name)->first();
+{
+    // Find the department by department_name
+    $department = Department::where('department_name', $department_name)->first();
 
-        if (!$department) {
-            
-            return redirect()->back()->with('error', 'Department not found.');
-        }
-
-        // Departmana ait doktorları al
-        $doctors = $department->doctors;
-
-        return view('department.doctors', ['department' => $department, 'doctors' => $doctors]);
+    // Check if the department exists
+    if (!$department) {
+        return redirect()->back()->with('error', 'Department not found.');
     }
+
+    // Get the doctors of the department
+    $doctors = Doctors::where('department_name', $department_name)->get();
+
+    return response()->json(['department' => $department, 'doctors' => $doctors]);//response json
+}
+
 
 }
 
