@@ -12,9 +12,10 @@ class Doctors extends Model
 
     protected $fillable = [
         'name',
+        'email',
         'specialization',
         'department_name',
-        'email'
+        
         
     ];
     public function department()
