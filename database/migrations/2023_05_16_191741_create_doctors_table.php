@@ -19,7 +19,6 @@ return new class extends Migration
                 $table->string('name');
                 $table->string('email');
                 $table->string('specialization');
-                $table->string('department_name');
                 $table->timestamps();
             });
         }

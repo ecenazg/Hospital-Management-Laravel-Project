@@ -11,6 +11,14 @@
             cursor: pointer;
             margin: 5px;
         }
+        table {
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
     </style>
 </head>
 <body>
@@ -26,9 +34,18 @@
         function showDoctors(departmentName) {
             // Send an AJAX request to fetch the doctors of the department
             fetch(`/department/${departmentName}/doctors`)
-                .then(response => response.text())
+                .then(response => response.json())
                 .then(data => {
-                    document.getElementById('doctors-container').innerHTML = data;
+                    let tableHtml = '<table>';
+                    tableHtml += '<tr><th>Name</th><th>Email</th></tr>';
+                    data.doctors.forEach(doctor => {
+                        tableHtml += '<tr>';
+                        tableHtml += '<td>' + doctor.name + '</td>';
+                        tableHtml += '<td>' + doctor.email + '</td>';
+                        tableHtml += '</tr>';
+                    });
+                    tableHtml += '</table>';
+                    document.getElementById('doctors-container').innerHTML = tableHtml;
                 });
         }
     </script>

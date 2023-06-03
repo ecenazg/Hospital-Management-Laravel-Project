@@ -15,4 +15,9 @@ class Patients extends Model
         'illness',
         'email'
     ];
+
+    public function doctor()
+    {
+        return $this->belongsTo(Doctor::class);
+    }
 }

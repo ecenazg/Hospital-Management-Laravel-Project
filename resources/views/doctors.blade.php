@@ -109,10 +109,15 @@
                 <td>
                     <button class="edit-button">Edit</button>
                     <button class="save-button" style="display: none;">Save</button>
-                    <form class="delete-form" action="{{ route('doctors.destroy', $doctor->id) }}" method="POST">
+                    <form class="delete-form" action="{{ route('doctors.destroy', ['id' => $doctor->id]) }}" method="POST">
                         @csrf
                         @method('DELETE')
                         <button type="submit">Delete</button>
+                    </form>
+                    <form class="send-patients-form" action="{{ route('doctors.sendToPatients') }}" method="POST" target="_blank">
+                        @csrf
+                        <input type="hidden" name="doctor_id" value="{{ $doctor->id }}">
+                        <button type="submit" class="send-patients-button">Send to Patients</button>
                     </form>
                 </td>
             </tr>
@@ -123,13 +128,13 @@
     <p>No doctors found.</p>
     @endif
 
-
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const editButtons = document.querySelectorAll('.edit-button');
             const saveButtons = document.querySelectorAll('.save-button');
             const editFields = document.querySelectorAll('.edit-field');
             const spans = document.querySelectorAll('td span');
+            const sendButtons = document.querySelectorAll('.send-patients-button');
 
             const handleEdit = (index) => {
                 spans[index].style.display = 'none';
@@ -151,15 +156,15 @@
                 formData.append('specialization', specialization);
 
                 fetch(`/doctors/${doctorId}`, {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        },
-                    })
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    },
+                })
                     .then(response => {
                         if (response.ok) {
-                            location.reload(); // Refresh 
+                            location.reload(); // Refresh the page
                             throw new Error('Failed to save changes.');
                         }
                     })
@@ -169,7 +174,7 @@
             };
 
             const handleInputChange = (event) => {
-                // Input değişikliklerini takip etmek için 
+                // Input changes tracking
             };
 
             editButtons.forEach((button, index) => {
@@ -183,12 +188,20 @@
                 });
             });
 
+            sendButtons.forEach(button => {
+                button.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    const form = button.parentElement;
+                    const doctorId = form.querySelector('input[name="doctor_id"]').value;
+                    form.setAttribute('action', `/doctors/${doctorId}/send-to-patients`);
+                    form.submit();
+                });
+            });
+
             editFields.forEach(field => {
                 field.addEventListener('input', handleInputChange);
             });
         });
     </script>
-
 </body>
-
 </html>
