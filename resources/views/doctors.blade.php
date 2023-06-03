@@ -119,6 +119,8 @@
                         <input type="hidden" name="doctor_id" value="{{ $doctor->id }}">
                         <button type="submit" class="send-patients-button">Send to Patients</button>
                     </form>
+
+
                 </td>
             </tr>
             @endforeach
@@ -203,31 +205,50 @@
             });
         });
 
-        function sendToPatients(doctor_id) {
-            // Send an AJAX request to fetch the patients of the doctor
-            fetch(`/doctors/${doctor_id}/patients`)
+        const handleSendToPatients = (doctorId) => {
+            fetch(`/doctors/${doctorId}/send-to-patients`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    },
+                    body: JSON.stringify({
+                        doctor_id: doctorId
+                    }),
+                })
                 .then(response => response.json())
                 .then(data => {
-                    let tableHtml = '<table>';
-                    tableHtml += '<tr><th>ID</th><th>Name</th><th>Email</th></tr>';
-                    data.patients.forEach(patient => {
-                        tableHtml += '<tr>';
-                        tableHtml += '<td>' + patient.id + '</td>';
-                        tableHtml += '<td>' + patient.name + '</td>';
-                        tableHtml += '<td>' + patient.email + '</td>';
-                        tableHtml += '</tr>';
-                    });
-                    tableHtml += '</table>';
+                    if (data.patients.length > 0) {
+                        let tableHtml = '<table>';
+                        tableHtml += '<tr><th>ID</th><th>Name</th><th>Email</th></tr>';
+                        data.patients.forEach(patient => {
+                            tableHtml += '<tr>';
+                            tableHtml += '<td>' + patient.id + '</td>';
+                            tableHtml += '<td>' + patient.name + '</td>';
+                            tableHtml += '<td>' + patient.email + '</td>';
+                            tableHtml += '</tr>';
+                        });
+                        tableHtml += '</table>';
 
-                    // Open a new window or tab to display the patient table
-                    const newWindow = window.open('', '_blank');
-                    newWindow.document.write(tableHtml);
-                    newWindow.document.close();
+                        const newWindow = window.open('', '_blank');
+                        newWindow.document.write(tableHtml);
+                        newWindow.document.close();
+                    } else {
+                        console.log('No patients found.');
+                    }
                 })
                 .catch(error => {
                     console.error('An error occurred while fetching patients:', error);
                 });
-        }
+        };
+
+        sendButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                event.preventDefault();
+                const doctorId = button.parentElement.querySelector('input[name="doctor_id"]').value;
+                handleSendToPatients(doctorId);
+            });
+        });
     </script>
 </body>
 
