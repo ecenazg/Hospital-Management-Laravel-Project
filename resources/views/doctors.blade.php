@@ -114,7 +114,7 @@
                         @method('DELETE')
                         <button type="submit">Delete</button>
                     </form>
-                    <form class="send-patients-form" action="{{ route('doctors.sendToPatients') }}" method="POST" target="_blank">
+                    <form class="send-patients-form" action="{{ route('doctors.sendToPatients', ['doctor_id' => $doctor->id]) }}" method="POST" target="_blank">
                         @csrf
                         <input type="hidden" name="doctor_id" value="{{ $doctor->id }}">
                         <button type="submit" class="send-patients-button">Send to Patients</button>
@@ -156,12 +156,12 @@
                 formData.append('specialization', specialization);
 
                 fetch(`/doctors/${doctorId}`, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    },
-                })
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        },
+                    })
                     .then(response => {
                         if (response.ok) {
                             location.reload(); // Refresh the page
@@ -202,6 +202,33 @@
                 field.addEventListener('input', handleInputChange);
             });
         });
+
+        function sendToPatients(doctor_id) {
+            // Send an AJAX request to fetch the patients of the doctor
+            fetch(`/doctors/${doctor_id}/patients`)
+                .then(response => response.json())
+                .then(data => {
+                    let tableHtml = '<table>';
+                    tableHtml += '<tr><th>ID</th><th>Name</th><th>Email</th></tr>';
+                    data.patients.forEach(patient => {
+                        tableHtml += '<tr>';
+                        tableHtml += '<td>' + patient.id + '</td>';
+                        tableHtml += '<td>' + patient.name + '</td>';
+                        tableHtml += '<td>' + patient.email + '</td>';
+                        tableHtml += '</tr>';
+                    });
+                    tableHtml += '</table>';
+
+                    // Open a new window or tab to display the patient table
+                    const newWindow = window.open('', '_blank');
+                    newWindow.document.write(tableHtml);
+                    newWindow.document.close();
+                })
+                .catch(error => {
+                    console.error('An error occurred while fetching patients:', error);
+                });
+        }
     </script>
 </body>
+
 </html>

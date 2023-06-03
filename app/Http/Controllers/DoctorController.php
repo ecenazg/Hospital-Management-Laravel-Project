@@ -55,13 +55,13 @@ class DoctorController extends Controller
         ]);
     }
 
-    public function sendToPatients(Request $request, $doctorId)
+    public function sendToPatients(Request $request, $doctor_id)
     {
-        // Retrieve the corresponding doctor based on the $doctorId
-        $doctor = Doctors::findOrFail($doctorId);
+        // Retrieve the corresponding doctor based on the $doctor_id
+        $doctor = Doctors::findOrFail($doctor_id);
 
         // Retrieve the associated patients of the doctor
-        $patients = $doctor->patients;
+        $patients = Patients::where('doctor_id', $doctor->id)->get();
 
         // Prepare the patient data
         $patientData = $patients->map(function ($patient) {
@@ -75,6 +75,7 @@ class DoctorController extends Controller
         // Return the patient data as JSON response
         return response()->json(['patients' => $patientData]);
     }
+
 
     public function destroy(int $id)
     {

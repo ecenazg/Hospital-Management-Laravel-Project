@@ -15,7 +15,7 @@ Route::get('/', function () {
 
 Route::get('/doctors', [DoctorController::class, 'index']);
 Route::post('/doctors/{id}', [DoctorController::class, 'edit'])->name('doctors.edit');
-Route::post('/doctors/{doctorId}/send-to-patients', [DoctorController::class, 'sendToPatients'])->name('doctors.sendToPatients');
+Route::post('/doctors/{doctor_id}/patients', [DoctorController::class, 'sendToPatients'])->name('doctors.sendToPatients');
 
 Route::delete('/doctors/{id}', [DoctorController::class, 'destroy'])->name('doctors.destroy');
 
