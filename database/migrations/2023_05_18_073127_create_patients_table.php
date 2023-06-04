@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('email');
             $table->string('illness');
             $table->string('department_name');
+            $table->Integer('doctor_id');
             $table->timestamps();
         });
     }
