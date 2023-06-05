@@ -85,6 +85,7 @@
             <li><a href="{{ url('/nurses') }}">Nurses</a></li>
             <li><a href="{{ url('/management') }}">Management</a></li>
             <li><a href="{{ url('/departments') }}">Departments</a></li>
+            <li><a href="{{ url('/appointments') }}">Appointments</a></li>
             <li><a href="{{ url('/contact') }}">Contact Us</a></li>
             <li><a href="{{ url('/about') }}">About</a></li>
         </ul>

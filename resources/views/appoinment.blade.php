@@ -1,170 +1,178 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Create Appointment</title>
+    <title>Appointment</title>
     <style>
-        /* Add your CSS styles here */
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
             padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         h1 {
+            text-align: center;
             margin-bottom: 20px;
         }
 
-        form {
-            max-width: 500px;
+        .form-group {
+            margin-bottom: 20px;
         }
 
         label {
             display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
+            margin-bottom: 5px;
         }
 
         select,
         input[type="date"],
         textarea {
             width: 100%;
-            padding: 8px;
+            padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            margin-bottom: 15px;
+            font-size: 14px;
         }
 
         button {
             padding: 10px 20px;
-            background-color: #4CAF50;
+            background-color: #4caf50;
             color: #fff;
             border: none;
             border-radius: 4px;
+            font-size: 14px;
             cursor: pointer;
         }
 
-        button:hover {
-            background-color: #45a049;
+        button:disabled {
+            background-color: #ddd;
+            cursor: not-allowed;
         }
     </style>
+
 </head>
+
 <body>
-    <h1>Create Appointment</h1>
+    <div class="container">
+        <h1>Appointment</h1>
+        <form id="appointmentForm" method="POST" action="{{ route('appointments.store') }}">
+            @csrf
 
-    <form action="{{ route('appointments.store') }}" method="POST">
-        @csrf
-
-        <div>
-            <label for="department">Department</label>
-            <select name="department" id="department">
-                <option value="">Please select a department</option>
-                @foreach($departments as $department)
+            <div class="form-group">
+                <label for="department">Department</label>
+                <select id="department" name="department" required>
+                    <option value="">Please select a department</option>
+                    @foreach ($departments as $department)
                     <option value="{{ $department->id }}">{{ $department->name }}</option>
-                @endforeach
-            </select>
-        </div>
+                    @endforeach
+                </select>
+            </div>
 
-        <div>
-            <label for="doctor">Doctor</label>
-            <select name="doctor" id="doctor">
-                <option value="">Please select a department first</option>
-            </select>
-        </div>
+            <div class="form-group">
+                <label for="doctor">Doctor</label>
+                <select id="doctor" name="doctor" required disabled>
+                    <option value="">Please select a department first</option>
+                </select>
+            </div>
 
-        <div>
-            <label for="date">Date</label>
-            <input type="date" name="date" id="date" value="">
-        </div>
+            <div class="form-group">
+                <label for="date">Date</label>
+                <input type="date" id="date" name="date" required disabled>
+            </div>
 
-        <div>
-            <label for="time">Time</label>
-            <select name="time" id="time">
-                <option value="">Please select a time</option>
-            </select>
-        </div>
+            <div class="form-group">
+                <label for="time">Time</label>
+                <select id="time" name="time" required disabled>
+                    <option value="">Please select a date first</option>
+                </select>
+            </div>
 
-        <div>
-            <label for="status">Status</label>
-            <select name="status" id="status">
-                <option value="pending">Pending</option>
-                <option value="confirmed">Confirmed</option>
-                <option value="cancelled">Cancelled</option>
-            </select>
-        </div>
+            <div class="form-group">
+                <label for="notes">Notes</label>
+                <textarea id="notes" name="notes"></textarea>
+            </div>
 
-        <div>
-            <label for="notes">Notes</label>
-            <textarea name="notes" id="notes" cols="30" rows="5"></textarea>
-        </div>
-
-        <button type="submit">Create</button>
-    </form>
+            <button type="submit" id="submitButton" disabled>Create Appointment</button>
+        </form>
+    </div>
 
     <script>
-    // Inline JavaScript for dynamic doctor selection based on department
-    const departmentSelect = document.getElementById('department');
-    const doctorSelect = document.getElementById('doctor');
-    const timeSelect = document.getElementById('time');
+        const departmentSelect = document.getElementById('department');
+        const doctorSelect = document.getElementById('doctor');
+        const dateInput = document.getElementById('date');
+        const timeSelect = document.getElementById('time');
+        const submitButton = document.getElementById('submitButton');
 
-    departmentSelect.addEventListener('change', function() {
-        const departmentId = this.value;
-        if (departmentId !== '') {
-            // Make an AJAX request to fetch doctors based on the selected department
-            fetch(`/doctors?department_id=${departmentId}`)
-                .then(response => response.json())
-                .then(data => {
-                    // Clear existing options
-                    doctorSelect.innerHTML = '<option value="">Please select a doctor</option>';
-                    // Add new options based on the fetched data
-                    data.forEach(doctor => {
-                        const option = document.createElement('option');
-                        option.value = doctor.id;
-                        option.textContent = doctor.first_name + ' ' + doctor.last_name;
-                        doctorSelect.appendChild(option);
+        departmentSelect.addEventListener('change', function() {
+            const departmentId = this.value;
+
+            if (departmentId) {
+                doctorSelect.innerHTML = '<option value="">Loading doctors...</option>';
+
+                fetch(`/departments/${departmentId}/doctors`)
+                    .then(response => response.json())
+                    .then(data => {
+                        let options = '<option value="">Please select a doctor</option>';
+                        data.forEach(doctor => {
+                            options += `<option value="${doctor.id}">${doctor.first_name} ${doctor.last_name}</option>`;
+                        });
+                        doctorSelect.innerHTML = options;
+                        doctorSelect.disabled = false;
                     });
-                })
-                .catch(error => console.log(error));
-        } else {
-            doctorSelect.innerHTML = '<option value="">Please select a department first</option>';
-        }
-    });
+            } else {
+                doctorSelect.innerHTML = '<option value="">Please select a department first</option>';
+                doctorSelect.disabled = true;
+                dateInput.disabled = true;
+                timeSelect.disabled = true;
+                submitButton.disabled = true;
+            }
+        });
 
-    // Set the initial doctor selection if editing an appointment
-    const initialDoctorId = {!! isset($appointment) && isset($appointment->doctor_id) ? $appointment->doctor_id : 'null' !!};
-    if (initialDoctorId) {
-        doctorSelect.value = initialDoctorId;
-    }
+        doctorSelect.addEventListener('change', function() {
+            const doctorId = this.value;
 
-    // Fetch available timeslots based on the selected doctor
-    doctorSelect.addEventListener('change', function() {
-        const doctorId = this.value;
-        if (doctorId !== '') {
-            // Make an AJAX request to fetch available timeslots for the selected doctor
-            fetch(`/timeslots?doctor_id=${doctorId}`)
-                .then(response => response.json())
-                .then(data => {
-                    // Clear existing options
-                    timeSelect.innerHTML = '<option value="">Please select a time</option>';
-                    // Add new options based on the fetched data
-                    data.forEach(timeslot => {
-                        const option = document.createElement('option');
-                        option.value = timeslot.id;
-                        option.textContent = timeslot.start_time + ' - ' + timeslot.end_time;
-                        timeSelect.appendChild(option);
+            if (doctorId) {
+                dateInput.disabled = false;
+            } else {
+                dateInput.value = '';
+                dateInput.disabled = true;
+                timeSelect.innerHTML = '<option value="">Please select a date first</option>';
+                timeSelect.disabled = true;
+                submitButton.disabled = true;
+            }
+        });
+
+        dateInput.addEventListener('change', function() {
+            const date = this.value;
+            const doctorId = doctorSelect.value;
+
+            if (date && doctorId) {
+                timeSelect.innerHTML = '<option value="">Loading time slots...</option>';
+                fetch(`/appointments/time-slots?doctor_id=${doctorId}&date=${date}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        let options = '<option value="">Please select a time slot</option>';
+                        data.forEach(timeSlot => {
+                            options += `<option value="${timeSlot}">${timeSlot}</option>`;
+                        });
+                        timeSelect.innerHTML = options;
+                        timeSelect.disabled = false;
+                        submitButton.disabled = false;
                     });
-                })
-                .catch(error => console.log(error));
-        } else {
-            timeSelect.innerHTML = '<option value="">Please select a doctor first</option>';
-        }
-    });
-
-    // Set the initial timeslot selection if editing an appointment
-    const initialTimeslotId = {!! isset($appointment) && isset($appointment->time) ? $appointment->time : 'null' !!};
-    if (initialTimeslotId) {
-        timeSelect.value = initialTimeslotId;
-    }
-</script>
-
+            } else {
+                timeSelect.innerHTML = '<option value="">Please select a date first</option>';
+                timeSelect.disabled = true;
+                submitButton.disabled = true;
+            }
+        });
+    </script>
 </body>
+
 </html>

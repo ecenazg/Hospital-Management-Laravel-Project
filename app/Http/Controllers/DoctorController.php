@@ -73,7 +73,7 @@ class DoctorController extends Controller
         });
 
         // Return the patient data as JSON response
-        return response()->json(['patients' => $patientData]);
+        return response()->view('send-to-patients', ['patients' => $patientData]);//view yazılacak
     }
 
 
