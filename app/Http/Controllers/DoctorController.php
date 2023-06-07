@@ -5,17 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\Doctors;
 use App\Models\Patients;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class DoctorController extends Controller
 {
-
-
-    public function index()
+    public function index(): Response
     {
         // Retrieve all doctors
         $doctors = Doctors::all();
 
-        return view('doctors', ['doctors' => $doctors]);
+        return Inertia::render('Doctors/Index', [
+            'doctors' => $doctors,
+        ]);
     }
 
     public function createDoctor(Request $request)
@@ -24,11 +26,13 @@ class DoctorController extends Controller
             'name' => 'required',
             'specialization' => 'required',
             'email' => 'required',
+            'department_name' => 'required',
         ]);
 
-        $doctor = Doctors::create($request->only('name', 'email', 'specialization'));
+        $doctor = Doctors::create($request->only('name', 'email', 'specialization','department_name' ));
 
         $doctors = Doctors::orderBy('id', 'asc')->get();
+
         return redirect('/doctors')->with('success', 'Doctor created successfully.');
     }
 
@@ -40,7 +44,6 @@ class DoctorController extends Controller
             'specialization' => 'required',
         ]);
 
-
         $doctor = Doctors::findOrFail($id);
         $doctor->name = $request->input('name');
         $doctor->email = $request->input('email');
@@ -51,11 +54,11 @@ class DoctorController extends Controller
             'message' => 'Doctor updated successfully',
             'name' => $doctor->name,
             'email' => $doctor->email,
-            'specialization' => $doctor->specialization
+            'specialization' => $doctor->specialization,
         ]);
     }
 
-    public function sendToPatients(Request $request, $doctor_id)
+    public function sendToPatients(Request $request, $doctor_id): Response
     {
         // Retrieve the corresponding doctor based on the $doctor_id
         $doctor = Doctors::findOrFail($doctor_id);
@@ -72,10 +75,10 @@ class DoctorController extends Controller
             ];
         });
 
-        // Return the patient data as JSON response
-        return response()->view('send-to-patients', ['patients' => $patientData]);//view yazılacak
+        return Inertia::render('Doctors/SendToPatients', [
+            'patients' => $patientData,
+        ]);
     }
-
 
     public function destroy(int $id)
     {
