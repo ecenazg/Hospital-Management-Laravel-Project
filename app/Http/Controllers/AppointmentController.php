@@ -11,14 +11,14 @@ use Illuminate\Http\Request;
 
 class AppointmentController extends Controller
 {
-    public function getAppointmentsByDate(Request $request)
+    /*public function getAppointmentsByDate(Request $request)   
     {
         if ($request->date) {
             $appointments = Appointment::where('date', $request->date)->get();
             $json = $appointments->toJson();
         }
         return response()->json(['html' => $json]);
-    }
+    }*/
 
     public function getDoctorsByDepartment(Request $request)
     {
@@ -27,7 +27,7 @@ class AppointmentController extends Controller
             $department = Department::find($request->id);
             $doctors = $department->doctors;
             foreach ($doctors as $doctor) {
-                $html .= '<option value="' . $doctor->id . '">' . $doctor->first_name . ' ' . $doctor->last_name . '</option>';
+                $html .= '<option value="' . $doctor->id . '">' . $doctor->name . '</option>';
             }
         }
         return response()->json(['html' => $html]);
@@ -65,8 +65,8 @@ class AppointmentController extends Controller
     {
         $request->validate([
             'patient' => 'required_without:first_name,last_name',
-            'first_name' => 'required_without:patient',
-            'last_name' => 'required_without:patient',
+            'name' => 'required_without:patient',
+        
             'doctor' => 'required',
             'department' => 'required',
             'date' => 'required',
@@ -78,8 +78,7 @@ class AppointmentController extends Controller
             $patient = Patients::find($request->patient);
         } else {
             $patient = Patients::create([
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
+                'name' => $request->name,
                 'email' => 'default@clinic.com',
             ]);
         }
