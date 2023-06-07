@@ -16,6 +16,23 @@ use Inertia\Inertia;
 |
 */
 
+Route::get('/doctors', [DoctorController::class, 'index'])
+    ->name('doctors.index')
+    ->middleware('auth');
+
+Route::post('/doctors/{id}', [DoctorController::class, 'update'])
+    ->name('doctors.update')
+    ->middleware('auth');
+
+Route::delete('/doctors/{id}', [DoctorController::class, 'destroy'])
+    ->name('doctors.destroy')
+    ->middleware('auth');
+
+Route::post('/doctors/{id}/send-to-patients', [DoctorController::class, 'sendToPatients'])
+    ->name('doctors.sendToPatients')
+    ->middleware('auth');
+
+
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -35,4 +52,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
