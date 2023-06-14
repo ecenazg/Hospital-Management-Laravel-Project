@@ -15,7 +15,8 @@ class DoctorController extends Controller
         // Retrieve all doctors
         $doctors = Doctors::all();
 
-        return Inertia::render('Doctors/Index', [
+        //dd(1);
+        return Inertia::render('Doctors', [
             'doctors' => $doctors,
         ]);
     }

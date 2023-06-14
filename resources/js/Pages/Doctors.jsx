@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-const DoctorManagement = ({ doctors }) => {
+const Doctors = ({ doctors }) => {
   useEffect(() => {
     const editButtons = document.querySelectorAll('.edit-button');
     const saveButtons = document.querySelectorAll('.save-button');
@@ -203,4 +203,4 @@ const DoctorManagement = ({ doctors }) => {
   );
 };
 
-export default DoctorManagement;
+export default Doctors;
