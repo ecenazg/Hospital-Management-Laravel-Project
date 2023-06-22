@@ -1,32 +1,19 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Doctors = ({ doctors }) => {
   useEffect(() => {
-    const editButtons = document.querySelectorAll('.edit-button');
-    const saveButtons = document.querySelectorAll('.save-button');
-    const editFields = document.querySelectorAll('.edit-field');
-    const spans = document.querySelectorAll('td span');
-    const sendButtons = document.querySelectorAll('.send-patients-button');
-
     const handleEdit = (index) => {
+      const editForms = document.querySelectorAll('.edit-form');
+      const spans = document.querySelectorAll('td span');
+
       spans[index].style.display = 'none';
-      editFields[index * 3].style.display = 'inline-block';
-      editFields[index * 3 + 1].style.display = 'inline-block';
-      editFields[index * 3 + 2].style.display = 'inline-block';
-      editButtons[index].style.display = 'none';
-      saveButtons[index].style.display = 'inline-block';
+      editForms[index].style.display = 'inline-block';
     };
 
     const handleSave = (doctorId, index) => {
-      const formData = new FormData();
-      const name = editFields[index * 3].value;
-      const email = editFields[index * 3 + 1].value;
-      const specialization = editFields[index * 3 + 2].value;
-
-      formData.append('name', name);
-      formData.append('email', email);
-      formData.append('specialization', specialization);
-
+      const editForms = document.querySelectorAll('.edit-form');
+      const formData = new FormData(editForms[index]);
+      
       fetch(`/doctors/${doctorId}`, {
         method: 'POST',
         body: formData,
@@ -35,9 +22,10 @@ const Doctors = ({ doctors }) => {
         },
       })
         .then((response) => {
-          if (response.ok) {
-            location.reload(); // Refresh the page
+          if (!response.ok) {
             throw new Error('Failed to save changes.');
+          } else {
+            location.reload(); // Refresh the page
           }
         })
         .catch((error) => {
@@ -48,6 +36,9 @@ const Doctors = ({ doctors }) => {
     const handleInputChange = (event) => {
       // Input changes tracking
     };
+
+    const editButtons = document.querySelectorAll('.edit-button');
+    const saveButtons = document.querySelectorAll('.save-button');
 
     editButtons.forEach((button, index) => {
       button.addEventListener('click', () => handleEdit(index));
@@ -62,16 +53,7 @@ const Doctors = ({ doctors }) => {
       });
     });
 
-    sendButtons.forEach((button) => {
-      button.addEventListener('click', (event) => {
-        event.preventDefault();
-        const form = button.parentElement;
-        const doctorId = form.querySelector('input[name="doctor_id"]').value;
-        form.setAttribute('action', `/doctors/${doctorId}/send-to-patients`);
-        form.submit();
-      });
-    });
-
+    const editFields = document.querySelectorAll('.edit-field');
     editFields.forEach((field) => {
       field.addEventListener('input', handleInputChange);
     });
@@ -130,42 +112,45 @@ const Doctors = ({ doctors }) => {
             </tr>
           </thead>
           <tbody>
-            {doctors.map((doctor) => (
+            {doctors.map((doctor, index) => (
               <tr key={`doctor-row-${doctor.id}`}>
                 <td>{doctor.id}</td>
                 <td>
                   <span>{doctor.name}</span>
-                  <input
-                    type="text"
-                    className="edit-field"
-                    value={doctor.name}
-                    style={{ display: 'none' }}
-                  />
+                  <form className="edit-form" style={{ display: 'none' }}>
+                    <input
+                      type="text"
+                      name="name"
+                      className="edit-field"
+                      value={doctor.name}
+                    />
+                  </form>
                 </td>
                 <td>
                   <span>{doctor.email}</span>
-                  <input
-                    type="text"
-                    className="edit-field"
-                    value={doctor.email}
-                    style={{ display: 'none' }}
-                  />
+                  <form className="edit-form" style={{ display: 'none' }}>
+                    <input
+                      type="text"
+                      name="email"
+                      className="edit-field"
+                      value={doctor.email}
+                    />
+                  </form>
                 </td>
                 <td>
                   <span>{doctor.specialization}</span>
-                  <input
-                    type="text"
-                    className="edit-field"
-                    value={doctor.specialization}
-                    style={{ display: 'none' }}
-                  />
+                  <form className="edit-form" style={{ display: 'none' }}>
+                    <input
+                      type="text"
+                      name="specialization"
+                      className="edit-field"
+                      value={doctor.specialization}
+                    />
+                  </form>
                 </td>
                 <td>
                   <button className="edit-button">Edit</button>
-                  <button
-                    className="save-button"
-                    style={{ display: 'none' }}
-                  >
+                  <button className="save-button" style={{ display: 'none' }}>
                     Save
                   </button>
                   <form
@@ -187,7 +172,11 @@ const Doctors = ({ doctors }) => {
                       name="doctor_id"
                       value={doctor.id}
                     />
-                    <button type="submit" className="send-patients-button">
+                    <button
+                      type="submit"
+                      className="send-patients-button"
+                      onClick={() => handleSendToPatients(doctor.id)}
+                    >
                       Send to Patients
                     </button>
                   </form>

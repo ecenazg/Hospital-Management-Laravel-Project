@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\PatientController;
 use Inertia\Inertia;
 
 /*
@@ -35,13 +36,29 @@ Route::post('/doctors/{id}/send-to-patients', [DoctorController::class, 'sendToP
 
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
+    return Inertia::render('Index', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
 });
+Route::get('/patients', [PatientController::class, 'index'])
+    ->name('patients.index')
+    ->middleware('auth');
+
+Route::post('/patients', [PatientController::class, 'createPatient'])
+    ->name('patients.create')
+    ->middleware('auth');
+
+Route::post('/patients/{id}', [PatientController::class, 'edit'])
+    ->name('patients.edit')
+    ->middleware('auth');
+
+Route::delete('/patients/{id}', [PatientController::class, 'destroy'])
+    ->name('patients.destroy')
+    ->middleware('auth');
+
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
