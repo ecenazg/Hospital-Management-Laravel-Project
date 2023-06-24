@@ -21,6 +21,14 @@ class LabTest extends Model
     'updated_by_id'
     ];
 
+
+
+
+    public function labs()
+    {
+    return $this->hasMany(BloodResults::class);
+    }
+
     public function laboratory()
     {
         return $this->belongsTo(Laboratory::class, 'lab', 'id');

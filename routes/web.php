@@ -6,17 +6,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\PatientController;
 use Inertia\Inertia;
-
 use App\Http\Controllers\LaboratoryController;
 
-Route::group(['prefix' => 'laboratories'], function () {
-    Route::get('/', [LaboratoryController::class, 'index'])->name('laboratories.index');
-    Route::get('/create', [LaboratoryController::class, 'create'])->name('laboratories.create');
-    Route::post('/', [LaboratoryController::class, 'store'])->name('laboratories.store');
-    Route::get('/{id}/edit', [LaboratoryController::class, 'edit'])->name('laboratories.edit');
-    Route::put('/{id}', [LaboratoryController::class, 'update'])->name('laboratories.update');
-    Route::delete('/{id}', [LaboratoryController::class, 'destroy'])->name('laboratories.destroy');
-});
+Route::get('/laboratory', [LaboratoryController::class, 'index'])->name('laboratory.index');
 
 
 

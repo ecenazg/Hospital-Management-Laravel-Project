@@ -15,7 +15,11 @@ class Laboratory extends Model
    'created_by_id', 'updated_by_id'];
 
 
-    
+   public function tests()
+{
+    return $this->hasMany(LabTest::class);
+}
+ 
    public function test(){
 
         return $this->belongsTo(Patients::class, 'name', 'test');
