@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('lab_tests', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('price');
             $table->integer('percentage');
+            $table->integer('lab');
             $table->percentage();
             $table->timestamps();
         });

@@ -11,10 +11,15 @@ class Laboratory extends Model
 {
     use HasFactory;
 
-    protected $fillable  = ['name','status',
+    protected $fillable  = ['id', 'name','status',
    'created_by_id', 'updated_by_id'];
 
 
+    
+   public function test(){
+
+        return $this->belongsTo(Patients::class, 'name', 'test');
+   }
 
    public function createdBy(): BelongsTo
    {

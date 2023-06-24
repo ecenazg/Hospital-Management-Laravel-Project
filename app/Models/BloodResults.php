@@ -9,6 +9,7 @@ class BloodResults extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'id',
         'name',
         'min',
         'max',

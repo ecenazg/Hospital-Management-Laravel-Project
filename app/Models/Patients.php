@@ -13,7 +13,11 @@ class Patients extends Model
     protected $fillable = [
         'name',
         'illness',
-        'email'
+        'email',
+        'test',
+        'department_name',
+        'doctor_id',
+
     ];
 
     public function doctor()

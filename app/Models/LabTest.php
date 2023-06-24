@@ -12,9 +12,19 @@ class LabTest extends Model
     use HasFactory;
 
 
-    protected $fillable  = ['name','price',
-    'percentage','created_by_id', 'updated_by_id'];
+    protected $fillable  = [
+    'id',
+    'name',
+    'percentage',
+    'lab',
+    'created_by_id', 
+    'updated_by_id'
+    ];
 
+    public function laboratory()
+    {
+        return $this->belongsTo(Laboratory::class, 'lab', 'id');
+    }
 
     public function createdBy(): BelongsTo
     {
