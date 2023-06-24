@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('laboratories', function (Blueprint $table) {
+        Schema::create('blood_results', function (Blueprint $table) {
             $table->id();
             $table-> string('name');
-            $table-> integer('status');
+            $table-> integer('min');
+            $table-> integer('max');
+            $table-> string('specialization');
             $table->timestamps();
         });
     }
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('laboratories');
+        Schema::dropIfExists('blood_results');
     }
 };
