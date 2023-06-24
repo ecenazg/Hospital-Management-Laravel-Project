@@ -50,8 +50,7 @@ class LabTestController extends Controller
     public function update(Request $request, int $id)
     {
         $request->validate([
-            'name' => 'required',
-            'price' => 'required',
+            'name' => 'required', 
             'percentage' => 'required',
             'created_by_id' => 'required',
             'updated_by_id' => 'required',
