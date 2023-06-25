@@ -19,7 +19,11 @@ class Laboratory extends Model
 {
     return $this->hasMany(LabTest::class);
 }
- 
+public function patients()
+{
+    return $this->hasMany(Patients::class, 'test', 'name');
+}
+
    public function test(){
 
         return $this->belongsTo(Patients::class, 'name', 'test');

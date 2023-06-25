@@ -7,8 +7,10 @@ use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\PatientController;
 use Inertia\Inertia;
 use App\Http\Controllers\LaboratoryController;
+use App\Http\Controllers\NurseController;
 
 Route::get('/laboratory', [LaboratoryController::class, 'index'])->name('laboratory.index');
+
 
 
 
@@ -24,10 +26,25 @@ Route::delete('/doctors/{id}', [DoctorController::class, 'destroy'])
     ->name('doctors.destroy')
     ->middleware('auth');
 
-Route::post('/doctors/{id}/send-to-patients', [DoctorController::class, 'sendToPatients'])
+    Route::get('/doctors/{id}/send-to-patients', [DoctorController::class, 'sendToPatients'])
     ->name('doctors.sendToPatients')
     ->middleware('auth');
 
+    Route::get('/nurses', [NurseController::class, 'index'])
+    ->name('nurses.index')
+    ->middleware('auth');
+
+Route::post('/nurses', [NurseController::class, 'createNurse'])
+    ->name('nurses.create')
+    ->middleware('auth');
+
+Route::post('/nurses/{id}', [NurseController::class, 'edit'])
+    ->name('nurses.edit')
+    ->middleware('auth');
+
+Route::delete('/nurses/{id}', [NurseController::class, 'destroy'])
+    ->name('nurses.destroy')
+    ->middleware('auth');
 
 Route::get('/', function () {
     return Inertia::render('Index', [
@@ -53,6 +70,7 @@ Route::delete('/patients/{id}', [PatientController::class, 'destroy'])
     ->name('patients.destroy')
     ->middleware('auth');
 
+    
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

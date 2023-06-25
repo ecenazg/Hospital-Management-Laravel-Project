@@ -15,7 +15,6 @@ class DoctorController extends Controller
         // Retrieve all doctors
         $doctors = Doctors::all();
 
-        //dd(1);
         return Inertia::render('Doctors', [
             'doctors' => $doctors,
         ]);
@@ -30,7 +29,7 @@ class DoctorController extends Controller
             'department_name' => 'required',
         ]);
 
-        $doctor = Doctors::create($request->only('name', 'email', 'specialization','department_name' ));
+        $doctor = Doctors::create($request->only('name', 'email', 'specialization', 'department_name'));
 
         $doctors = Doctors::orderBy('id', 'asc')->get();
 

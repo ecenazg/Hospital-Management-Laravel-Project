@@ -1,21 +1,48 @@
-import React from 'react';
-import { Link } from 'inertia-react';
+import React, { useEffect, useState } from 'react';
 
-const Laboratory = ({ laboratory, patientTests }) => {
+const Laboratory = () => {
+  const [laboratory, setLaboratory] = useState(null);
+  const [patientTests, setPatientTests] = useState([]);
+
+  useEffect(() => {
+    const fetchLaboratoryData = async () => {
+      // Fetch laboratory data from the server
+      const response = await fetch('/api/laboratory');
+      const data = await response.json();
+
+      setLaboratory(data.laboratory);
+      setPatientTests(data.patientTests);
+    };
+
+    fetchLaboratoryData();
+  }, []);
+
   return (
     <div>
-      <h1>Laboratory: {laboratory.name}</h1>
-      <h2>Tests</h2>
-      <ul>
-        {patientTests.map((patientTest, index) => (
-          <li key={index}>
-            <strong>Test:</strong> {patientTest.test}<br />
-            <strong>Patient:</strong> {patientTest.patient}<br />
-            <strong>Status:</strong> {patientTest.status}
-          </li>
-        ))}
-      </ul>
-      <Link href="/laboratory">Back to Laboratories</Link>
+      {laboratory && (
+        <div>
+          <h1>Laboratory: {laboratory.name}</h1>
+          <table>
+            <thead>
+              <tr>
+                <th>Test</th>
+                <th>Patient</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {patientTests.map((patientTest, index) => (
+                <tr key={index}>
+                  <td>{patientTest.test}</td>
+                  <td>{patientTest.patient}</td>
+                  <td>{patientTest.status}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      <a href="/laboratory">Back to Laboratories</a>
     </div>
   );
 };

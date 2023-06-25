@@ -24,4 +24,13 @@ class Patients extends Model
     {
         return $this->belongsTo(Doctor::class);
     }
+
+
+    public function laboratory()
+{
+    return $this->belongsTo(Laboratory::class, 'test', 'name');
+}
+
+
+
 }

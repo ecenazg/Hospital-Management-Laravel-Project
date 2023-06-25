@@ -1,156 +1,90 @@
 import React, { useState, useEffect } from 'react';
 
 const Doctors = ({ doctors }) => {
-  useEffect(() => {
-    const handleEdit = (index) => {
-      const editForms = document.querySelectorAll('.edit-form');
-      const spans = document.querySelectorAll('td span');
+  const handleEdit = (id) => {
+    const doctor = doctors.find((doctor) => doctor.id === id);
+    const editField = document.querySelector(`#edit-field-${id}`);
+    const saveButton = document.querySelector(`#save-button-${id}`);
 
-      spans[index].style.display = 'none';
-      editForms[index].style.display = 'inline-block';
-    };
+    if (doctor && editField && saveButton) {
+      editField.style.display = 'block';
+      editField.value = doctor.name;
+      saveButton.style.display = 'inline-block';
+    }
+  };
 
-    const handleSave = (doctorId, index) => {
-      const editForms = document.querySelectorAll('.edit-form');
-      const formData = new FormData(editForms[index]);
-      
-      fetch(`/doctors/${doctorId}`, {
+  const handleSave = (id) => {
+    const doctor = doctors.find((doctor) => doctor.id === id);
+    const editField = document.querySelector(`#edit-field-${id}`);
+    const saveButton = document.querySelector(`#save-button-${id}`);
+
+    if (doctor && editField && saveButton) {
+      doctor.name = editField.value;
+      saveButton.innerText = 'Saving...';
+
+      // Make a fetch request to update the doctor
+      fetch(`/doctors/${id}`, {
         method: 'POST',
-        body: formData,
         headers: {
-          'X-CSRF-TOKEN': '{{ csrf_token() }}',
+          'Content-Type': 'application/json',
+          // Add your CSRF token header here
+          // 'X-CSRF-TOKEN': 'your-csrf-token',
         },
+        body: JSON.stringify({ name: doctor.name }),
       })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error('Failed to save changes.');
-          } else {
-            location.reload(); // Refresh the page
-          }
+        .then((response) => response.json())
+        .then((data) => {
+          // Handle the response data
+          saveButton.innerText = 'Save';
+          editField.style.display = 'none';
+          saveButton.style.display = 'none';
         })
         .catch((error) => {
-          console.error('An error occurred while saving changes:', error);
+          console.error('Error:', error);
         });
-    };
-
-    const handleInputChange = (event) => {
-      // Input changes tracking
-    };
-
-    const editButtons = document.querySelectorAll('.edit-button');
-    const saveButtons = document.querySelectorAll('.save-button');
-
-    editButtons.forEach((button, index) => {
-      button.addEventListener('click', () => handleEdit(index));
-    });
-
-    saveButtons.forEach((button, index) => {
-      button.addEventListener('click', () => {
-        const doctorId = button.parentElement.parentElement.querySelector(
-          'td:first-child'
-        ).textContent;
-        handleSave(doctorId, index);
-      });
-    });
-
-    const editFields = document.querySelectorAll('.edit-field');
-    editFields.forEach((field) => {
-      field.addEventListener('input', handleInputChange);
-    });
-  }, []);
-
-  const handleSendToPatients = (doctorId) => {
-    fetch(`/doctors/${doctorId}/send-to-patients`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-      },
-      body: JSON.stringify({
-        doctor_id: doctorId,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.patients.length > 0) {
-          let tableHtml = '<table>';
-          tableHtml += '<tr><th>ID</th><th>Name</th><th>Email</th></tr>';
-          data.patients.forEach((patient) => {
-            tableHtml += '<tr>';
-            tableHtml += '<td>' + patient.id + '</td>';
-            tableHtml += '<td>' + patient.name + '</td>';
-            tableHtml += '<td>' + patient.email + '</td>';
-            tableHtml += '</tr>';
-          });
-          tableHtml += '</table>';
-
-          const newWindow = window.open('', '_blank');
-          newWindow.document.write(tableHtml);
-          newWindow.document.close();
-        } else {
-          console.log('No patients found.');
-        }
-      })
-      .catch((error) => {
-        console.error('An error occurred while fetching patients:', error);
-      });
+    }
   };
 
   return (
-    <div>
+    <div className="overflow-x-auto">
       <h1>Doctor Management</h1>
 
       {doctors.length > 0 ? (
-        <table>
+        <table className="table">
           <thead>
             <tr>
               <th>ID</th>
               <th>Name</th>
               <th>Email</th>
-              <th>Specialization</th>
+              <th>Department</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {doctors.map((doctor, index) => (
-              <tr key={`doctor-row-${doctor.id}`}>
+            {doctors.map((doctor) => (
+              <tr key={doctor.id}>
                 <td>{doctor.id}</td>
                 <td>
                   <span>{doctor.name}</span>
-                  <form className="edit-form" style={{ display: 'none' }}>
-                    <input
-                      type="text"
-                      name="name"
-                      className="edit-field"
-                      value={doctor.name}
-                    />
-                  </form>
+                  <input
+                    type="text"
+                    className="edit-field"
+                    id={`edit-field-${doctor.id}`}
+                    style={{ display: 'none' }}
+                  />
                 </td>
+                <td>{doctor.email}</td>
+                <td>{doctor.department_name}</td>
                 <td>
-                  <span>{doctor.email}</span>
-                  <form className="edit-form" style={{ display: 'none' }}>
-                    <input
-                      type="text"
-                      name="email"
-                      className="edit-field"
-                      value={doctor.email}
-                    />
-                  </form>
-                </td>
-                <td>
-                  <span>{doctor.specialization}</span>
-                  <form className="edit-form" style={{ display: 'none' }}>
-                    <input
-                      type="text"
-                      name="specialization"
-                      className="edit-field"
-                      value={doctor.specialization}
-                    />
-                  </form>
-                </td>
-                <td>
-                  <button className="edit-button">Edit</button>
-                  <button className="save-button" style={{ display: 'none' }}>
+                  <button className="edit-button" onClick={() => handleEdit(doctor.id)}>
+                    Edit
+                  </button>
+                  <button
+                    className="save-button"
+                    id={`save-button-${doctor.id}`}
+                    style={{ display: 'none' }}
+                    onClick={() => handleSave(doctor.id)}
+                  >
                     Save
                   </button>
                   <form
@@ -158,7 +92,7 @@ const Doctors = ({ doctors }) => {
                     action={`/doctors/${doctor.id}`}
                     method="POST"
                   >
-                    <input type="hidden" name="_method" value="DELETE" />
+                    {/* CSRF token and other necessary fields for the DELETE request should be added here */}
                     <button type="submit">Delete</button>
                   </form>
                   <form
@@ -167,16 +101,9 @@ const Doctors = ({ doctors }) => {
                     method="POST"
                     target="_blank"
                   >
-                    <input
-                      type="hidden"
-                      name="doctor_id"
-                      value={doctor.id}
-                    />
-                    <button
-                      type="submit"
-                      className="send-patients-button"
-                      onClick={() => handleSendToPatients(doctor.id)}
-                    >
+                    {/* CSRF token and other necessary fields for sending patients should be added here */}
+                    <input type="hidden" name="doctor_id" value={doctor.id} />
+                    <button type="submit" className="send-patients-button">
                       Send to Patients
                     </button>
                   </form>

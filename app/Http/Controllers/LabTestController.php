@@ -10,6 +10,14 @@ use Inertia\Response;
 
 class LabTestController extends Controller
 {
+    public function showReport(Request $request, int $id): Response
+    {
+        $labTest = LabTest::findOrFail($id);
+        $report = $labTest->report;
+
+        return Inertia::render('LabTests/Report', compact('labTest', 'report'));
+    }
+    
     public function index(): Response
     {
         $labTests = LabTest::all();
