@@ -1,29 +1,29 @@
 import React from 'react';
 import { Inertia } from '@inertiajs/inertia';
 
-const Nurses = ({ nurses }) => {
+const Patients = ({ patients }) => {
   const handleEdit = (id) => {
-    const nurse = nurses.find((nurse) => nurse.id === id);
+    const patient = patients.find((patient) => patient.id === id);
     const editField = document.querySelector(`#edit-field-${id}`);
     const saveButton = document.querySelector(`#save-button-${id}`);
 
-    if (nurse && editField && saveButton) {
+    if (patient && editField && saveButton) {
       editField.style.display = 'block';
-      editField.value = nurse.name;
+      editField.value = patient.name;
       saveButton.style.display = 'inline-block';
     }
   };
 
   const handleSave = (id) => {
-    const nurse = nurses.find((nurse) => nurse.id === id);
+    const patient = patients.find((patient) => patient.id === id);
     const editField = document.querySelector(`#edit-field-${id}`);
     const saveButton = document.querySelector(`#save-button-${id}`);
 
-    if (nurse && editField && saveButton) {
-      nurse.name = editField.value;
+    if (patient && editField && saveButton) {
+      patient.name = editField.value;
       saveButton.innerText = 'Saving...';
 
-      Inertia.post(`/nurses/${id}`, { name: nurse.name })
+      Inertia.post(`/patients/${id}`, { name: patient.name })
         .then((response) => {
           // Handle the response data
           saveButton.innerText = 'Save';
@@ -37,8 +37,8 @@ const Nurses = ({ nurses }) => {
   };
 
   const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this nurse?')) {
-      Inertia.delete(`/nurses/${id}`)
+    if (window.confirm('Are you sure you want to delete this patient?')) {
+      Inertia.delete(`/patients/${id}`)
         .then(() => {
           // Handle success
         })
@@ -50,47 +50,47 @@ const Nurses = ({ nurses }) => {
 
   return (
     <div className="overflow-x-auto">
-      <h1>Nurse Management</h1>
+      <h1>Patient Management</h1>
 
-      {nurses.length > 0 ? (
+      {patients.length > 0 ? (
         <table className="table">
           <thead>
             <tr>
               <th>ID</th>
               <th>Name</th>
               <th>Email</th>
-              <th>Department</th>
+              <th>Illness</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {nurses.map((nurse) => (
-              <tr key={nurse.id}>
-                <td>{nurse.id}</td>
+            {patients.map((patient) => (
+              <tr key={patient.id}>
+                <td>{patient.id}</td>
                 <td>
-                  <span>{nurse.name}</span>
+                  <span>{patient.name}</span>
                   <input
                     type="text"
                     className="edit-field"
-                    id={`edit-field-${nurse.id}`}
+                    id={`edit-field-${patient.id}`}
                     style={{ display: 'none' }}
                   />
                 </td>
-                <td>{nurse.email}</td>
-                <td>{nurse.department}</td>
+                <td>{patient.email}</td>
+                <td>{patient.illness}</td>
                 <td>
-                  <button className="edit-button" onClick={() => handleEdit(nurse.id)}>
+                  <button className="edit-button" onClick={() => handleEdit(patient.id)}>
                     Edit
                   </button>
                   <button
                     className="save-button"
-                    id={`save-button-${nurse.id}`}
+                    id={`save-button-${patient.id}`}
                     style={{ display: 'none' }}
-                    onClick={() => handleSave(nurse.id)}
+                    onClick={() => handleSave(patient.id)}
                   >
                     Save
                   </button>
-                  <button className="delete-button" onClick={() => handleDelete(nurse.id)}>
+                  <button className="delete-button" onClick={() => handleDelete(patient.id)}>
                     Delete
                   </button>
                 </td>
@@ -99,10 +99,10 @@ const Nurses = ({ nurses }) => {
           </tbody>
         </table>
       ) : (
-        <p>No nurses found.</p>
+        <p>No patients found.</p>
       )}
     </div>
   );
 };
 
-export default Nurses;
+export default Patients;

@@ -8,9 +8,16 @@ use App\Http\Controllers\PatientController;
 use Inertia\Inertia;
 use App\Http\Controllers\LaboratoryController;
 use App\Http\Controllers\NurseController;
+use App\Http\Controllers\ManagementController;
 
 Route::get('/laboratory', [LaboratoryController::class, 'index'])->name('laboratory.index');
 
+
+
+Route::get('/management', [ManagementController::class, 'index'])->name('management.index');
+Route::post('/create-doctor', [ManagementController::class, 'createDoctor'])->name('management.createDoctor');
+Route::post('/create-nurse', [ManagementController::class, 'createNurse'])->name('management.createNurse');
+Route::post('/create-patient', [ManagementController::class, 'createPatient'])->name('management.createPatient');
 
 
 
@@ -26,16 +33,24 @@ Route::delete('/doctors/{id}', [DoctorController::class, 'destroy'])
     ->name('doctors.destroy')
     ->middleware('auth');
 
-    Route::get('/doctors/{id}/send-to-patients', [DoctorController::class, 'sendToPatients'])
+Route::get('/doctors/{id}/send-to-patients', [DoctorController::class, 'sendToPatients'])
     ->name('doctors.sendToPatients')
     ->middleware('auth');
 
-    Route::get('/nurses', [NurseController::class, 'index'])
-    ->name('nurses.index')
+Route::get('/patients', [PatientController::class, 'index'])
+    ->name('patients.index')
     ->middleware('auth');
 
-Route::post('/nurses', [NurseController::class, 'createNurse'])
-    ->name('nurses.create')
+Route::post('/patients/{id}', [PatientController::class, 'edit'])
+    ->name('patients.edit')
+    ->middleware('auth');
+
+Route::delete('/patients/{id}', [PatientController::class, 'destroy'])
+    ->name('patients.destroy')
+    ->middleware('auth');
+
+Route::get('/nurses', [NurseController::class, 'index'])
+    ->name('nurses.index')
     ->middleware('auth');
 
 Route::post('/nurses/{id}', [NurseController::class, 'edit'])
@@ -54,23 +69,7 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
-Route::get('/patients', [PatientController::class, 'index'])
-    ->name('patients.index')
-    ->middleware('auth');
 
-Route::post('/patients', [PatientController::class, 'createPatient'])
-    ->name('patients.create')
-    ->middleware('auth');
-
-Route::post('/patients/{id}', [PatientController::class, 'edit'])
-    ->name('patients.edit')
-    ->middleware('auth');
-
-Route::delete('/patients/{id}', [PatientController::class, 'destroy'])
-    ->name('patients.destroy')
-    ->middleware('auth');
-
-    
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

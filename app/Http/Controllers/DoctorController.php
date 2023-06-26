@@ -91,3 +91,4 @@ class DoctorController extends Controller
         return redirect('/doctors')->with('success', 'Doctor deleted successfully.');
     }
 }
+?>
