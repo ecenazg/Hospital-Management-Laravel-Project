@@ -11,9 +11,13 @@ use App\Http\Controllers\NurseController;
 use App\Http\Controllers\ManagementController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\TechnologyController;
 
 Route::get('/laboratory', [LaboratoryController::class, 'index'])->name('laboratory.index');
 
+
+
+Route::get('/technologies', [TechnologyController::class, 'index'])->name('technology.index');
 
 
 // Department Routes
