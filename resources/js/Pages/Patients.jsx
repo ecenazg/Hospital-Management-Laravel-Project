@@ -3,13 +3,13 @@ import { Inertia } from '@inertiajs/inertia';
 
 const Patients = ({ patients }) => {
   const handleEdit = (id) => {
-    const patient = patients.find((patient) => patient.id === id);
+    const patient = nurses.find((patient) => patient.id === id);
     const editField = document.querySelector(`#edit-field-${id}`);
     const saveButton = document.querySelector(`#save-button-${id}`);
 
     if (patient && editField && saveButton) {
       editField.style.display = 'block';
-      editField.value = patient.name;
+      editField.value = nurse.name;
       saveButton.style.display = 'inline-block';
     }
   };
@@ -37,7 +37,7 @@ const Patients = ({ patients }) => {
   };
 
   const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this patient?')) {
+    if (window.confirm('Are you sure you want to delete this nurse?')) {
       Inertia.delete(`/patients/${id}`)
         .then(() => {
           // Handle success
@@ -50,7 +50,7 @@ const Patients = ({ patients }) => {
 
   return (
     <div className="overflow-x-auto">
-      <h1>Patient Management</h1>
+      <h1>patient Management</h1>
 
       {patients.length > 0 ? (
         <table className="table">

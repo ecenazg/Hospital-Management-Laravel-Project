@@ -78,3 +78,4 @@ class LabTestController extends Controller
         return redirect()->route('lab-tests.index')->with('success', 'Lab Test deleted successfully.');
     }
 }
+?>

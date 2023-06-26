@@ -9,9 +9,21 @@ use Inertia\Inertia;
 use App\Http\Controllers\LaboratoryController;
 use App\Http\Controllers\NurseController;
 use App\Http\Controllers\ManagementController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\DepartmentController;
 
 Route::get('/laboratory', [LaboratoryController::class, 'index'])->name('laboratory.index');
 
+
+
+// Department Routes
+Route::get('/departments', [DepartmentController::class, 'index'])->name('departments.index');
+Route::get('/departments/{department_name}', [DepartmentController::class, 'showDoctors'])->name('departments.showDoctors');
+
+
+
+Route::get('/contact', [ContactController::class, 'create'])->name('contact.create');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
 
 Route::get('/management', [ManagementController::class, 'index'])->name('management.index');

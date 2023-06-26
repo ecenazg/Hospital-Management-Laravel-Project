@@ -71,3 +71,4 @@ class TimeScheduleController extends Controller
         return redirect(route('time_schedules.index'));
     }
 }
+?>

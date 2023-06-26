@@ -159,3 +159,4 @@ class AppointmentController extends Controller
         return view('appointments.list', compact('doctor'));
     }
 }
+?>

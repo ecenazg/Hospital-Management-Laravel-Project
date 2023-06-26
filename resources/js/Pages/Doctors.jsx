@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Inertia } from '@inertiajs/inertia';
 
 const Doctors = ({ doctors }) => {
   const handleEdit = (id) => {
@@ -44,7 +45,17 @@ const Doctors = ({ doctors }) => {
         });
     }
   };
-
+  const handleDelete = (id) => {
+    if (window.confirm('Are you sure you want to delete this patient?')) {
+      Inertia.delete(`/doctors/${id}`)
+        .then(() => {
+          // Handle success
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    }
+  };
   return (
     <div className="overflow-x-auto">
       <h1>Doctor Management</h1>
