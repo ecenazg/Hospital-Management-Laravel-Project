@@ -1,8 +1,9 @@
 import React from 'react';
-
+import Navbar from './Navbar';
 const LabTest = ({ labTest, bloodResults }) => {
   return (
     <div>
+      <Navbar />
       <h1>Lab Test: {labTest.name}</h1>
       <h2>Lab Test Result</h2>
       <table>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Inertia } from '@inertiajs/inertia';
-
+import Navbar from './Navbar';
 
 
 const Management = () => {
@@ -21,6 +21,7 @@ const Management = () => {
 
   return (
     <div>
+      <Navbar />
       <h1>Management</h1>
 
       <div className="flex">

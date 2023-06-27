@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
+import Navbar from './Navbar';
 const Laboratory = () => {
   const [laboratory, setLaboratory] = useState(null);
   const [patientTests, setPatientTests] = useState([]);
@@ -19,6 +19,7 @@ const Laboratory = () => {
 
   return (
     <div>
+      <Navbar />
       {laboratory && (
         <div>
           <h1>Laboratory: {laboratory.name}</h1>

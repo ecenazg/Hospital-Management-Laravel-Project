@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import Navbar from './Navbar';
 
 const Department = () => {
   const [departments, setDepartments] = useState([]);
@@ -20,6 +20,7 @@ const Department = () => {
 
   return (
     <div>
+      <Navbar />
       <h1>Guven Hospital Departments</h1>
       {departments.map((department) => (
         <div key={department.id}>

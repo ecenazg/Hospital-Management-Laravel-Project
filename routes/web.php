@@ -30,6 +30,7 @@ Route::get('/contact', [ContactController::class, 'create'])->name('contact.crea
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
 
+
 Route::get('/management', [ManagementController::class, 'index'])->name('management.index');
 Route::post('/create-doctor', [ManagementController::class, 'createDoctor'])->name('management.createDoctor');
 Route::post('/create-nurse', [ManagementController::class, 'createNurse'])->name('management.createNurse');

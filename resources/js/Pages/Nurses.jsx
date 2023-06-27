@@ -1,6 +1,6 @@
 import React from 'react';
 import { Inertia } from '@inertiajs/inertia';
-
+import Navbar from './Navbar';
 const Nurses = ({ nurses }) => {
   const handleEdit = (id) => {
     const nurse = nurses.find((nurse) => nurse.id === id);
@@ -50,6 +50,7 @@ const Nurses = ({ nurses }) => {
 
   return (
     <div className="overflow-x-auto">
+      <Navbar />
       <h1>Nurse Management</h1>
 
       {nurses.length > 0 ? (
