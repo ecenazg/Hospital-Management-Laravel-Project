@@ -37,26 +37,26 @@ class DoctorController extends Controller
     }
 
     public function edit(Request $request, int $id)
-    {
-        $data = $request->validate([
-            'name' => 'required',
-            'email' => 'required',
-            'specialization' => 'required',
-        ]);
+{
+    $data = $request->validate([
+        'name' => 'required',
+        'email' => 'required',
+        'department_name' => 'required',
+    ]);
 
-        $doctor = Doctors::findOrFail($id);
-        $doctor->name = $request->input('name');
-        $doctor->email = $request->input('email');
-        $doctor->specialization = $request->input('specialization');
-        $doctor->save();
+    $doctor = Doctors::findOrFail($id);
+    $doctor->name = $request->input('name');
+    $doctor->email = $request->input('email');
+    $doctor->department_name = $request->input('department_name');
+    $doctor->save();
 
-        return response()->json([
-            'message' => 'Doctor updated successfully',
-            'name' => $doctor->name,
-            'email' => $doctor->email,
-            'specialization' => $doctor->specialization,
-        ]);
-    }
+    return response()->json([
+        'message' => 'Doctor updated successfully',
+        'doctor' => $doctor,
+    ]);
+}
+
+
 
     public function sendToPatients(Request $request, $doctor_id): Response
     {

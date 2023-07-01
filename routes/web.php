@@ -9,9 +9,12 @@ use Inertia\Inertia;
 use App\Http\Controllers\LaboratoryController;
 use App\Http\Controllers\NurseController;
 use App\Http\Controllers\ManagementController;
-use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\TechnologyController;
+use App\Http\Controllers\ContactController;
+
+Route::get('/contact', [ContactController::class, 'create'])->name('contact.create');
+//Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
 Route::get('/laboratory', [LaboratoryController::class, 'index'])->name('laboratory.index');
 
@@ -26,11 +29,6 @@ Route::get('/departments/{department_name}', [DepartmentController::class, 'show
 
 
 
-Route::get('/contact', [ContactController::class, 'create'])->name('contact.create');
-Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
-
-
-
 Route::get('/management', [ManagementController::class, 'index'])->name('management.index');
 Route::post('/create-doctor', [ManagementController::class, 'createDoctor'])->name('management.createDoctor');
 Route::post('/create-nurse', [ManagementController::class, 'createNurse'])->name('management.createNurse');
@@ -42,9 +40,10 @@ Route::get('/doctors', [DoctorController::class, 'index'])
     ->name('doctors.index')
     ->middleware('auth');
 
-Route::post('/doctors/{id}', [DoctorController::class, 'update'])
-    ->name('doctors.update')
+    Route::post('/doctors/{id}', [DoctorController::class, 'edit'])
+    ->name('doctors.edit')
     ->middleware('auth');
+
 
 Route::delete('/doctors/{id}', [DoctorController::class, 'destroy'])
     ->name('doctors.destroy')

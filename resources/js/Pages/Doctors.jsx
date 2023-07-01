@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Inertia } from '@inertiajs/inertia';
 import Navbar from './Navbar';
-const Doctors = ({ doctors }) => {
+import $ from 'jquery';
+
+const Doctors = ({ doctors, csrf_token }) => {
   const handleEdit = (id) => {
     const doctor = doctors.find((doctor) => doctor.id === id);
     const editField = document.querySelector(`#edit-field-${id}`);
@@ -18,33 +20,32 @@ const Doctors = ({ doctors }) => {
     const doctor = doctors.find((doctor) => doctor.id === id);
     const editField = document.querySelector(`#edit-field-${id}`);
     const saveButton = document.querySelector(`#save-button-${id}`);
-
+  
     if (doctor && editField && saveButton) {
       doctor.name = editField.value;
       saveButton.innerText = 'Saving...';
 
-      // Make a fetch request to update the doctor
-      fetch(`/doctors/${id}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          // Add your CSRF token header here
-          // 'X-CSRF-TOKEN': 'your-csrf-token',
+      // Make an AJAX request to update the doctor
+      $.ajax({
+        type: 'POST',
+        url: `/doctors/${id}`,
+        data: {
+          name: doctor.name,
+          _token: csrf_token,
         },
-        body: JSON.stringify({ name: doctor.name }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          // Handle the response data
+        success: function (data) {
+          console.log(data); // Add this line to inspect the response
           saveButton.innerText = 'Save';
           editField.style.display = 'none';
           saveButton.style.display = 'none';
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
+        },
+        error: function (data, textStatus, errorThrown) {
+          console.error('Error:', data);
+        },
+      });
     }
   };
+
   const handleDelete = (id) => {
     if (window.confirm('Are you sure you want to delete this patient?')) {
       Inertia.delete(`/doctors/${id}`)
@@ -56,9 +57,22 @@ const Doctors = ({ doctors }) => {
         });
     }
   };
+
+  useEffect(() => {
+    // Add CSRF token to AJAX requests
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+      },
+    });
+  }, []);
+
   return (
     <div className="overflow-x-auto">
       <Navbar />
+      <head>
+      <meta name="csrf-token" content="{{ csrf_token() }}" />
+      </head>
       <h1>Doctor Management</h1>
 
       {doctors.length > 0 ? (
@@ -99,12 +113,10 @@ const Doctors = ({ doctors }) => {
                   >
                     Save
                   </button>
-                  <form
-                    className="delete-form"
-                    action={`/doctors/${doctor.id}`}
-                    method="POST"
-                  >
-                    {/* CSRF token and other necessary fields for the DELETE request should be added here */}
+                  <form className="delete-form" action={`/doctors/${doctor.id}`} method="POST">
+                    <input type="hidden" name="_method" value="DELETE" />
+                    {/* Include the CSRF token field */}
+                    <input type="hidden" name="_token" value={csrf_token} />
                     <button type="submit">Delete</button>
                   </form>
                   <form
@@ -113,7 +125,8 @@ const Doctors = ({ doctors }) => {
                     method="POST"
                     target="_blank"
                   >
-                    {/* CSRF token and other necessary fields for sending patients should be added here */}
+                    {/* Include the CSRF token field */}
+                    <input type="hidden" name="_token" value={csrf_token} />
                     <input type="hidden" name="doctor_id" value={doctor.id} />
                     <button type="submit" className="send-patients-button">
                       Send to Patients

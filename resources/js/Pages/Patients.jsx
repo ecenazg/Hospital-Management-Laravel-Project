@@ -1,6 +1,9 @@
 import React from 'react';
 import { Inertia } from '@inertiajs/inertia';
 import Navbar from './Navbar';
+
+
+
 const Patients = ({ patients }) => {
   const handleEdit = (id) => {
     const patient = nurses.find((patient) => patient.id === id);
