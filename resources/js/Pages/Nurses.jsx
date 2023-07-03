@@ -1,38 +1,56 @@
 import React from 'react';
 import { Inertia } from '@inertiajs/inertia';
 import Navbar from './Navbar';
+import axios from 'axios';
+
 const Nurses = ({ nurses }) => {
   const handleEdit = (id) => {
     const nurse = nurses.find((nurse) => nurse.id === id);
     const editField = document.querySelector(`#edit-field-${id}`);
+    const departmentField = document.querySelector(`#department-field-${id}`);
     const saveButton = document.querySelector(`#save-button-${id}`);
 
-    if (nurse && editField && saveButton) {
+    if (nurse && editField && departmentField && saveButton) {
       editField.style.display = 'block';
       editField.value = nurse.name;
+      departmentField.style.display = 'block';
+      departmentField.value = nurse.department;
       saveButton.style.display = 'inline-block';
     }
   };
 
-  const handleSave = (id) => {
+  const handleSave = async (id) => {
     const nurse = nurses.find((nurse) => nurse.id === id);
     const editField = document.querySelector(`#edit-field-${id}`);
+    const departmentField = document.querySelector(`#department-field-${id}`);
     const saveButton = document.querySelector(`#save-button-${id}`);
 
-    if (nurse && editField && saveButton) {
+    if (nurse && editField && departmentField && saveButton) {
       nurse.name = editField.value;
+      nurse.department = departmentField.value;
       saveButton.innerText = 'Saving...';
 
-      Inertia.post(`/nurses/${id}`, { name: nurse.name })
-        .then((response) => {
-          // Handle the response data
-          saveButton.innerText = 'Save';
-          editField.style.display = 'none';
-          saveButton.style.display = 'none';
-        })
-        .catch((error) => {
-          console.error('Error:', error);
+      try {
+        const response = await axios.post(`/nurses/${id}`, {
+          name: nurse.name,
+          email: nurse.email,
+          department: nurse.department,
         });
+
+        console.log(response);
+        saveButton.innerText = 'Save';
+        editField.style.display = 'none';
+        departmentField.style.display = 'none';
+        saveButton.style.display = 'none';
+      } catch (error) {
+        console.error('Error:', error);
+
+        if (error.response && error.response.data && error.response.data.errors) {
+          // Handle the specific error messages returned by the server
+          const errorMessages = Object.values(error.response.data.errors);
+          console.log(errorMessages);
+        }
+      }
     }
   };
 
@@ -78,7 +96,15 @@ const Nurses = ({ nurses }) => {
                   />
                 </td>
                 <td>{nurse.email}</td>
-                <td>{nurse.department}</td>
+                <td>
+                  <span>{nurse.department}</span>
+                  <input
+                    type="text"
+                    className="edit-field"
+                    id={`department-field-${nurse.id}`}
+                    style={{ display: 'none' }}
+                  />
+                </td>
                 <td>
                   <button className="edit-button" onClick={() => handleEdit(nurse.id)}>
                     Edit

@@ -30,19 +30,17 @@ const Doctors = ({ doctors, csrf_token }) => {
       saveButton.innerText = 'Saving...';
   
       try {
-        // Make an Inertia POST request to update the doctor
-        const response = await post(`/doctors/${id}`, {
+        const response = await axios.post(`/doctors/${id}`, {
           name: doctor.name,
+          email: doctor.email,
+          department_name: doctor.department_name,
           _token: csrf_token,
         });
-  
-        console.log(response); // Add this line to inspect the response
-  
-        saveButton.innerText = 'Save';
-        editField.style.display = 'none';
-        saveButton.style.display = 'none';
+      
+        console.log(response);
       } catch (error) {
         console.error('Error:', error);
+        console.log(error.response.data); // Access the error response data
       }
     }
   };

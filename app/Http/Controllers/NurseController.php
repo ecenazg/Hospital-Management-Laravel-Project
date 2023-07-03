@@ -30,7 +30,7 @@ class NurseController extends Controller
         return redirect()->with('success', 'Nurse created successfully.');
     }
 
-    public function update(Request $request, int $id)
+    public function edit(Request $request, int $id)
     {
         $data = $request->validate([
             'name' => 'required',
