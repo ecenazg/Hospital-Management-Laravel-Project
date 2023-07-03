@@ -19,8 +19,8 @@ class ContactController extends Controller
         ]);
 
         $contact = Contact::create($request->only('name', 'email', 'message'));
-
-
+        dd(1);
+        
         return Inertia::render('Contact');
     }
 

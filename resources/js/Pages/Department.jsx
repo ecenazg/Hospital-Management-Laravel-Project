@@ -1,34 +1,70 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Inertia } from '@inertiajs/inertia';
 import Navbar from './Navbar';
 
-const Department = () => {
-  const [departments, setDepartments] = useState([]);
+const Department = ({ departments }) => {
+  const [doctors, setDoctors] = useState([]);
 
-  useEffect(() => {
-    fetchDepartments();
-  }, []);
+  const fetchDoctorsByDepartment = async (departmentName) => {
+    const response = await Inertia.get(`/departments/${departmentName}/doctors`);
 
-  const fetchDepartments = async () => {
-    try {
-      const response = await axios.get('/departments');
-      setDepartments(response.data.departments);
-    } catch (error) {
-      console.error(error);
+    if (response && response.department && response.doctors) {
+      const { department, doctors } = response;
+      console.log(department); // For debugging
+      console.log(doctors); // For debugging
+      setDoctors(doctors);
     }
   };
 
   return (
     <div>
       <Navbar />
-      <h1>Guven Hospital Departments</h1>
-      {departments.map((department) => (
-        <div key={department.id}>
-          <h2>{department.department_name}</h2>
-          <p>{department.description}</p>
-          <Link to={`/departments/${department.department_name}`}>View Doctors</Link>
-        </div>
-      ))}
+      <h1>Ece Hospital Departments</h1>
+      {Array.isArray(departments) && departments.length > 0 ? (
+        <table>
+          <thead>
+            <tr>
+              <th>Department   </th>
+              <th>Department Head   </th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {departments.map((department) => (
+              <tr key={department.id}>
+                <td>{department.department_name}</td>
+                <td>{department.department_head}</td>
+                <td>
+                  <button onClick={() => fetchDoctorsByDepartment(department.department_name)}>
+                    View Doctors
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p>No departments found.</p>
+      )}
+
+      {doctors.length > 0 && (
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+            </tr>
+          </thead>
+          <tbody>
+            {doctors.map((doctor) => (
+              <tr key={doctor.id}>
+                <td>{doctor.name}</td>
+                <td>{doctor.email}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 };

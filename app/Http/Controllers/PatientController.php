@@ -15,7 +15,7 @@ class PatientController extends Controller
         $patients = Patients::all();
 
         // Render the patients index page using Inertia
-        return Inertia::render('Patients/Index', ['patients' => $patients]);
+        return Inertia::render('Patients', ['patients' => $patients]);
     }
 
     public function create(Request $request)

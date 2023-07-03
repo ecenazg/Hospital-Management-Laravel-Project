@@ -13,12 +13,13 @@ class DepartmentController extends Controller
     {
         // Retrieve all departments
         $departments = Department::all();
-
-        return Inertia::render('Department/Index', [
+        //dd($departments);
+        return Inertia::render('Department', [
             'departments' => $departments,
+
         ]);
     }
-
+    
     public function showDoctors($department_name)
     {
         // Find the department by department_name

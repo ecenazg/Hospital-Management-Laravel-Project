@@ -25,8 +25,7 @@ Route::get('/technologies', [TechnologyController::class, 'index'])->name('techn
 
 // Department Routes
 Route::get('/departments', [DepartmentController::class, 'index'])->name('departments.index');
-Route::get('/departments/{department_name}', [DepartmentController::class, 'showDoctors'])->name('departments.showDoctors');
-
+Route::get('/departments/{department_name}/doctors', [DepartmentController::class, 'showDoctors']);
 
 
 Route::get('/management', [ManagementController::class, 'index'])->name('management.index');

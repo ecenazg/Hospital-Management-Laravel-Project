@@ -1,23 +1,23 @@
 import React from 'react';
 import { Inertia } from '@inertiajs/inertia';
 import Navbar from './Navbar';
-
+import axios from 'axios';
 
 
 const Patients = ({ patients }) => {
   const handleEdit = (id) => {
-    const patient = nurses.find((patient) => patient.id === id);
+    const patient = patients.find((patient) => patient.id === id);
     const editField = document.querySelector(`#edit-field-${id}`);
     const saveButton = document.querySelector(`#save-button-${id}`);
 
     if (patient && editField && saveButton) {
       editField.style.display = 'block';
-      editField.value = nurse.name;
+      editField.value = patient.name;
       saveButton.style.display = 'inline-block';
     }
   };
 
-  const handleSave = (id) => {
+  const handleSave = async (id) => {
     const patient = patients.find((patient) => patient.id === id);
     const editField = document.querySelector(`#edit-field-${id}`);
     const saveButton = document.querySelector(`#save-button-${id}`);
@@ -26,21 +26,26 @@ const Patients = ({ patients }) => {
       patient.name = editField.value;
       saveButton.innerText = 'Saving...';
 
-      Inertia.post(`/patients/${id}`, { name: patient.name })
-        .then((response) => {
-          // Handle the response data
-          saveButton.innerText = 'Save';
-          editField.style.display = 'none';
-          saveButton.style.display = 'none';
-        })
-        .catch((error) => {
-          console.error('Error:', error);
+      try {
+        // Make an Inertia POST request to update the doctor
+        const response = await post(`/patients/${id}`, {
+          name: patient.name,
+          _token: csrf_token,
         });
+  
+        console.log(response); // Add this line to inspect the response
+  
+        saveButton.innerText = 'Save';
+        editField.style.display = 'none';
+        saveButton.style.display = 'none';
+      } catch (error) {
+        console.error('Error:', error);
+      }
     }
   };
 
   const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this nurse?')) {
+    if (window.confirm('Are you sure you want to delete this patient?')) {
       Inertia.delete(`/patients/${id}`)
         .then(() => {
           // Handle success

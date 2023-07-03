@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Inertia } from '@inertiajs/inertia';
 import Navbar from './Navbar';
-import $ from 'jquery';
+import { useForm } from '@inertiajs/inertia-react';
+import axios from 'axios';
+
+
 
 const Doctors = ({ doctors, csrf_token }) => {
+  const { post, delete: destroy } = useForm();
+
   const handleEdit = (id) => {
     const doctor = doctors.find((doctor) => doctor.id === id);
     const editField = document.querySelector(`#edit-field-${id}`);
@@ -16,7 +20,7 @@ const Doctors = ({ doctors, csrf_token }) => {
     }
   };
 
-  const handleSave = (id) => {
+  const handleSave = async (id) => {
     const doctor = doctors.find((doctor) => doctor.id === id);
     const editField = document.querySelector(`#edit-field-${id}`);
     const saveButton = document.querySelector(`#save-button-${id}`);
@@ -24,30 +28,28 @@ const Doctors = ({ doctors, csrf_token }) => {
     if (doctor && editField && saveButton) {
       doctor.name = editField.value;
       saveButton.innerText = 'Saving...';
-
-      // Make an AJAX request to update the doctor
-      $.ajax({
-        type: 'POST',
-        url: `/doctors/${id}`,
-        data: {
+  
+      try {
+        // Make an Inertia POST request to update the doctor
+        const response = await post(`/doctors/${id}`, {
           name: doctor.name,
           _token: csrf_token,
-        },
-        success: function (data) {
-          console.log(data); // Add this line to inspect the response
-          saveButton.innerText = 'Save';
-          editField.style.display = 'none';
-          saveButton.style.display = 'none';
-        },
-        error: function (data, textStatus, errorThrown) {
-          console.error('Error:', data);
-        },
-      });
+        });
+  
+        console.log(response); // Add this line to inspect the response
+  
+        saveButton.innerText = 'Save';
+        editField.style.display = 'none';
+        saveButton.style.display = 'none';
+      } catch (error) {
+        console.error('Error:', error);
+      }
     }
   };
-
+  
+  
   const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this patient?')) {
+    if (window.confirm('Are you sure you want to delete this doctor?')) {
       Inertia.delete(`/doctors/${id}`)
         .then(() => {
           // Handle success
@@ -57,22 +59,17 @@ const Doctors = ({ doctors, csrf_token }) => {
         });
     }
   };
+  
 
-  useEffect(() => {
-    // Add CSRF token to AJAX requests
-    $.ajaxSetup({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-      },
-    });
-  }, []);
-
+  /*useEffect(() => {
+    // Add CSRF token to Inertia requests
+    Inertia.axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token;
+  }, [csrf_token]);
+*/
   return (
     <div className="overflow-x-auto">
       <Navbar />
-      <head>
-      <meta name="csrf-token" content="{{ csrf_token() }}" />
-      </head>
+      
       <h1>Doctor Management</h1>
 
       {doctors.length > 0 ? (
