@@ -6,21 +6,41 @@ import Navbar from './Navbar';
 const Management = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [selectedStaff, setSelectedStaff] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
-  const handleCreateDoctor = (data) => {
-    Inertia.post('/create-doctor', data); // Assuming you have a route '/create-doctor' in your backend to handle the creation of a doctor record
+  const handleCreateDoctor = async (data) => {
+    try {
+      await Inertia.post('/create-doctor', data);
+      setSuccessMessage('Doctor created successfully.');
+    } catch (error) {
+      console.error(error);
+      setSuccessMessage('Failed to create doctor.');
+    }
   };
 
-  const handleCreateNurse = (data) => {
-    Inertia.post('/create-nurse', data); // Assuming you have a route '/create-nurse' in your backend to handle the creation of a nurse record
+  const handleCreateNurse = async (data) => {
+    try {
+      await Inertia.post('/create-nurse', data);
+      setSuccessMessage('Nurse created successfully.');
+    } catch (error) {
+      console.error(error);
+      setSuccessMessage('Failed to create nurse.');
+    }
   };
 
-  const handleCreatePatient = (data) => {
-    Inertia.post('/create-patient', data); // Assuming you have a route '/create-patient' in your backend to handle the creation of a patient record
+  const handleCreatePatient = async (data) => {
+    try {
+      await Inertia.post('/create-patient', data);
+      setSuccessMessage('Patient created successfully.');
+    } catch (error) {
+      console.error(error);
+      setSuccessMessage('Failed to create patient.');
+    }
   };
 
   const handleSelectionChange = (e) => {
     setSelectedStaff(e.target.value);
+    setSuccessMessage(''); // Clear success message when staff selection changes
   };
 
   return (
@@ -45,19 +65,24 @@ const Management = () => {
                 <form onSubmit={handleSubmit(handleCreateDoctor)}>
                   <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
                     <div className="md:col-span-5">
-                      <label htmlFor="doctor_name">Name:</label>
-                      <input type="text" {...register('doctor_name', { required: true })} className="input input-bordered input-primary rounded-lg" />
-                      {errors.doctor_name && <span>This field is required</span>}
+                      <label htmlFor="name">Name:</label>
+                      <input type="text" {...register('name', { required: true })} className="input input-bordered input-primary rounded-lg" />
+                      {errors.name && <span>This field is required</span>}
                     </div>
                     <div className="md:col-span-5">
-                      <label htmlFor="doctor_email">Email:</label>
-                      <input type="text" {...register('doctor_email', { required: true })} className="input input-bordered input-primary rounded-lg" />
-                      {errors.doctor_email && <span>This field is required</span>}
+                      <label htmlFor="email">Email:</label>
+                      <input type="text" {...register('email', { required: true })} className="input input-bordered input-primary rounded-lg" />
+                      {errors.email && <span>This field is required</span>}
                     </div>
                     <div className="md:col-span-5">
                       <label htmlFor="specialization">Specialization:</label>
                       <input type="text" {...register('specialization', { required: true })} className="input input-bordered input-primary rounded-lg" />
                       {errors.specialization && <span>This field is required</span>}
+                    </div>
+                    <div className="md:col-span-5">
+                      <label htmlFor="department_name">Department Name:</label>
+                      <input type="text" {...register('department_name', { required: true })} className="input input-bordered input-primary rounded-lg" />
+                      {errors.department_name && <span>This field is required</span>}
                     </div>
                     <div className="md:col-span-5">
                       <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Create Doctor</button>
@@ -74,19 +99,19 @@ const Management = () => {
                 <form onSubmit={handleSubmit(handleCreateNurse)}>
                   <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
                     <div className="md:col-span-5">
-                      <label htmlFor="nurse_name">Name:</label>
-                      <input type="text" {...register('nurse_name', { required: true })} className="input input-bordered input-primary rounded-lg" />
-                      {errors.nurse_name && <span>This field is required</span>}
+                      <label htmlFor="name">Name:</label>
+                      <input type="text" {...register('name', { required: true })} className="input input-bordered input-primary rounded-lg" />
+                      {errors.name && <span>This field is required</span>}
                     </div>
                     <div className="md:col-span-5">
-                      <label htmlFor="nurse_email">Email:</label>
-                      <input type="text" {...register('nurse_email', { required: true })} className="input input-bordered input-primary rounded-lg" />
-                      {errors.nurse_email && <span>This field is required</span>}
+                      <label htmlFor="email">Email:</label>
+                      <input type="text" {...register('email', { required: true })} className="input input-bordered input-primary rounded-lg" />
+                      {errors.email && <span>This field is required</span>}
                     </div>
                     <div className="md:col-span-5">
-                      <label htmlFor="department">Department:</label>
-                      <input type="text" {...register('department', { required: true })} className="input input-bordered input-primary rounded-lg" />
-                      {errors.department && <span>This field is required</span>}
+                      <label htmlFor="department_name">Department Name:</label>
+                      <input type="text" {...register('department_name', { required: true })} className="input input-bordered input-primary rounded-lg" />
+                      {errors.department_name && <span>This field is required</span>}
                     </div>
                     <div className="md:col-span-5">
                       <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Create Nurse</button>
@@ -103,19 +128,14 @@ const Management = () => {
                 <form onSubmit={handleSubmit(handleCreatePatient)}>
                   <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
                     <div className="md:col-span-5">
-                      <label htmlFor="patient_name">Name:</label>
-                      <input type="text" {...register('patient_name', { required: true })} className="input input-bordered input-primary rounded-lg" />
-                      {errors.patient_name && <span>This field is required</span>}
+                      <label htmlFor="name">Name:</label>
+                      <input type="text" {...register('name', { required: true })} className="input input-bordered input-primary rounded-lg" />
+                      {errors.name && <span>This field is required</span>}
                     </div>
                     <div className="md:col-span-5">
-                      <label htmlFor="patient_email">Email:</label>
-                      <input type="text" {...register('patient_email', { required: true })} className="input input-bordered input-primary rounded-lg" />
-                      {errors.patient_email && <span>This field is required</span>}
-                    </div>
-                    <div className="md:col-span-5">
-                      <label htmlFor="phone_number">Phone Number:</label>
-                      <input type="text" {...register('phone_number', { required: true })} className="input input-bordered input-primary rounded-lg" />
-                      {errors.phone_number && <span>This field is required</span>}
+                      <label htmlFor="email">Email:</label>
+                      <input type="text" {...register('email', { required: true })} className="input input-bordered input-primary rounded-lg" />
+                      {errors.email && <span>This field is required</span>}
                     </div>
                     <div className="md:col-span-5">
                       <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Create Patient</button>
@@ -127,6 +147,12 @@ const Management = () => {
           )}
         </div>
       </div>
+
+      {successMessage && (
+        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-4" role="alert">
+          <span className="block sm:inline">{successMessage}</span>
+        </div>
+      )}
     </div>
   );
 };

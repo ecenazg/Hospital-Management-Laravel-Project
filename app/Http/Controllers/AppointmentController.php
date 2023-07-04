@@ -1,5 +1,4 @@
-<?php
-
+<?
 namespace App\Http\Controllers;
 
 use App\Models\Appointment;
@@ -8,6 +7,7 @@ use App\Models\Doctors;
 use App\Models\Patients;
 use App\Models\TimeSchedule;
 use Illuminate\Http\Request;
+
 
 class AppointmentController extends Controller
 {
@@ -96,7 +96,7 @@ class AppointmentController extends Controller
         // Flash message
         session()->flash('success', 'New Appointment Added Successfully.');
 
-        return redirect(route('appointments.index'));
+        return redirect()->route('appointments.index');
     }
 
     public function show(Appointment $appointment)
@@ -136,7 +136,7 @@ class AppointmentController extends Controller
         // Flash message
         session()->flash('success', 'Appointment Updated Successfully.');
 
-        return redirect(route('appointments.index'));
+        return redirect()->route('appointments.index');
     }
 
     public function destroy(Appointment $appointment)
@@ -146,7 +146,7 @@ class AppointmentController extends Controller
         // Flash message
         session()->flash('success', 'Appointment Deleted Successfully.');
 
-        return redirect(route('appointments.index'));
+        return redirect()->route('appointments.index');
     }
 
     public function createAppointmentForDoctor(Doctors $doctor)

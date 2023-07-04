@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './Navbar';
 import { useForm } from '@inertiajs/inertia-react';
 import axios from 'axios';
+import { Inertia } from '@inertiajs/inertia';
 
 
 
@@ -46,97 +47,101 @@ const Doctors = ({ doctors, csrf_token }) => {
   };
   
   
-  const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this doctor?')) {
-      Inertia.delete(`/doctors/${id}`)
-        .then(() => {
-          // Handle success
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
+
+// ...
+const handleDelete = async (id) => {
+  if (window.confirm('Are you sure you want to delete this doctor?')) {
+    try {
+      const response = await axios.delete(`/doctors/${id}`, {
+        headers: {
+          'X-CSRF-TOKEN': csrf_token,
+          'X-Requested-With': 'XMLHttpRequest',
+        },
+      });
+
+      console.log(response);
+      // Perform any necessary actions after successful deletion
+      Inertia.reload(); // Reload the current page
+    } catch (error) {
+      console.error('Error:', error);
+      if (error.response) {
+        console.log(error.response.data); // Access the error response data
+      }
     }
-  };
-  
+  }
+};
 
-  /*useEffect(() => {
-    // Add CSRF token to Inertia requests
-    Inertia.axios.defaults.headers.common['X-CSRF-TOKEN'] = csrf_token;
-  }, [csrf_token]);
-*/
-  return (
-    <div className="overflow-x-auto">
-      <Navbar />
-      
-      <h1>Doctor Management</h1>
 
-      {doctors.length > 0 ? (
-        <table className="table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Department</th>
-              <th>Actions</th>
+return (
+  <div className="overflow-x-auto">
+    <Navbar />
+
+    <h1>Doctor Management</h1>
+
+    {doctors.length > 0 ? (
+      <table className="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Department</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {doctors.map((doctor) => (
+            <tr key={doctor.id}>
+              <td>{doctor.id}</td>
+              <td>
+                <span>{doctor.name}</span>
+                <input
+                  type="text"
+                  className="edit-field"
+                  id={`edit-field-${doctor.id}`}
+                  style={{ display: 'none' }}
+                />
+              </td>
+              <td>{doctor.email}</td>
+              <td>{doctor.department_name}</td>
+              <td>
+                <button className="edit-button" onClick={() => handleEdit(doctor.id)}>
+                  Edit
+                </button>
+                <button
+                  className="save-button"
+                  id={`save-button-${doctor.id}`}
+                  style={{ display: 'none' }}
+                  onClick={() => handleSave(doctor.id)}
+                >
+                  Save
+                </button>
+                <button className="delete-button" onClick={() => handleDelete(doctor.id)}>
+                  Delete
+                </button>
+                <form
+                  className="send-patients-form"
+                  action={`/doctors/${doctor.id}/send-to-patients`}
+                  method="POST"
+                  target="_blank"
+                >
+                  {/* Include the CSRF token field */}
+                  <input type="hidden" name="_token" value={csrf_token} />
+                  <input type="hidden" name="doctor_id" value={doctor.id} />
+                  <button type="submit" className="send-patients-button">
+                    Send to Patients
+                  </button>
+                </form>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {doctors.map((doctor) => (
-              <tr key={doctor.id}>
-                <td>{doctor.id}</td>
-                <td>
-                  <span>{doctor.name}</span>
-                  <input
-                    type="text"
-                    className="edit-field"
-                    id={`edit-field-${doctor.id}`}
-                    style={{ display: 'none' }}
-                  />
-                </td>
-                <td>{doctor.email}</td>
-                <td>{doctor.department_name}</td>
-                <td>
-                  <button className="edit-button" onClick={() => handleEdit(doctor.id)}>
-                    Edit
-                  </button>
-                  <button
-                    className="save-button"
-                    id={`save-button-${doctor.id}`}
-                    style={{ display: 'none' }}
-                    onClick={() => handleSave(doctor.id)}
-                  >
-                    Save
-                  </button>
-                  <form className="delete-form" action={`/doctors/${doctor.id}`} method="POST">
-                    <input type="hidden" name="_method" value="DELETE" />
-                    {/* Include the CSRF token field */}
-                    <input type="hidden" name="_token" value={csrf_token} />
-                    <button type="submit">Delete</button>
-                  </form>
-                  <form
-                    className="send-patients-form"
-                    action={`/doctors/${doctor.id}/send-to-patients`}
-                    method="POST"
-                    target="_blank"
-                  >
-                    {/* Include the CSRF token field */}
-                    <input type="hidden" name="_token" value={csrf_token} />
-                    <input type="hidden" name="doctor_id" value={doctor.id} />
-                    <button type="submit" className="send-patients-button">
-                      Send to Patients
-                    </button>
-                  </form>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <p>No doctors found.</p>
-      )}
-    </div>
-  );
+          ))}
+        </tbody>
+      </table>
+    ) : (
+      <p>No doctors found.</p>
+    )}
+  </div>
+);
 };
 
 export default Doctors;

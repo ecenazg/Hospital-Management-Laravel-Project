@@ -1,5 +1,4 @@
-<?php
-
+<?
 namespace App\Http\Controllers;
 
 use App\Models\TimeSchedule;
@@ -34,7 +33,7 @@ class TimeScheduleController extends Controller
         // Flash message
         session()->flash('success', 'Time Schedule Created Successfully.');
 
-        return redirect(route('time_schedules.index'));
+        return redirect()->route('time_schedules.index');
     }
 
     public function edit(TimeSchedule $timeSchedule)
@@ -58,7 +57,7 @@ class TimeScheduleController extends Controller
         // Flash message
         session()->flash('success', 'Time Schedule Updated Successfully.');
 
-        return redirect(route('time_schedules.index'));
+        return redirect()->route('time_schedules.index');
     }
 
     public function destroy(TimeSchedule $timeSchedule)
@@ -68,7 +67,7 @@ class TimeScheduleController extends Controller
         // Flash message
         session()->flash('success', 'Time Schedule Deleted Successfully.');
 
-        return redirect(route('time_schedules.index'));
+        return redirect()->route('time_schedules.index');
     }
 }
 ?>

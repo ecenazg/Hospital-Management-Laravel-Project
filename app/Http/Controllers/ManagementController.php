@@ -21,14 +21,15 @@ class ManagementController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'specialization' => 'required',
             'email' => 'required',
+            'specialization' => 'required',
+            'department_name' => 'required',
         ]);
 
-        $doctor = Doctors::create($request->only('name', 'email', 'specialization'));
+        $doctor = Doctors::create($request->only('name', 'email', 'specialization', 'department_name'));
 
         // Redirect back to the index page with a success message
-        return redirect()->with('success', 'Doctor created successfully.');
+        return back()->with('success', 'Doctor created successfully.');
     }
 
     public function createNurse(Request $request)
@@ -36,13 +37,13 @@ class ManagementController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'required',
-            'department' => 'required',
+            'department_name' => 'required',
         ]);
 
-        $nurse = Nurses::create($request->only('name', 'email', 'department'));
+        $nurse = Nurses::create($request->only('name', 'email', 'department_name'));
 
         // Redirect back to the index page with a success message
-        return redirect()->with('success', 'Nurse created successfully.');
+        return back()->with('success', 'Nurse created successfully.');
     }
 
     public function createPatient(Request $request)
@@ -51,12 +52,14 @@ class ManagementController extends Controller
             'name' => 'required',
             'illness' => 'required',
             'email' => 'required',
+            'test' => 'required',
+            'department_name' => 'required',
+            'doctor_id' => 'required',
         ]);
 
-        $patient = Patients::create($request->only('name', 'email', 'illness'));
+        $patient = Patients::create($request->only('name', 'email', 'illness', 'test', 'department_name', 'doctor_id'));
 
         // Redirect back to the index page with a success message
-        return redirect()->with('success', 'Patient created successfully.');
+        return back()->with('success', 'Patient created successfully.');
     }
 }
-?>

@@ -50,15 +50,26 @@ const Patients = ({ patients, csrf_token }) => {
     }
   };
 
-  const handleDelete = (id) => {
+  
+  const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this patient?')) {
-      Inertia.delete(`/patients/${id}`)
-        .then(() => {
-          // Handle success
-        })
-        .catch((error) => {
-          console.error('Error:', error);
+      try {
+        const response = await axios.delete(`/patients/${id}`, {
+          headers: {
+            'X-CSRF-TOKEN': csrf_token,
+            'X-Requested-With': 'XMLHttpRequest',
+          },
         });
+  
+        console.log(response);
+        // Perform any necessary actions after successful deletion
+        Inertia.reload(); // Reload the current page
+      } catch (error) {
+        console.error('Error:', error);
+        if (error.response) {
+          console.log(error.response.data); // Access the error response data
+        }
+      }
     }
   };
 
