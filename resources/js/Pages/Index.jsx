@@ -187,12 +187,7 @@ const NavBar = () => {
                         >
                             Technologies
                         </a>
-                        <a
-                            href="/services"
-                            className="mt-3 text-gray-600 hover:underline sm:mx-3 sm:mt-0"
-                        >
-                            Services
-                        </a>
+                        
                         <a
                             href="/contact"
                             className="mt-3 text-gray-600 hover:underline sm:mx-3 sm:mt-0"
