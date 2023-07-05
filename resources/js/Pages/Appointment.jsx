@@ -123,30 +123,36 @@ const Appointment = () => {
             ))}
           </select>
         </div>
-        <div>
-          <label>Doctor:</label>
-          <select value={selectedDoctor} onChange={handleDoctorChange}>
-            <option value="">Select a doctor</option>
-            {doctors
-              .filter(doctor => doctor.department_id === selectedDepartment)
-              .map(doctor => (
-                <option key={doctor.id} value={doctor.id}>{doctor.name}</option>
+        {selectedDepartment && (
+          <div>
+            <label>Doctor:</label>
+            <select value={selectedDoctor} onChange={handleDoctorChange}>
+              <option value="">Select a doctor</option>
+              {doctors
+                .filter(doctor => doctor.department_id === selectedDepartment)
+                .map(doctor => (
+                  <option key={doctor.id} value={doctor.id}>{doctor.name}</option>
+                ))}
+            </select>
+          </div>
+        )}
+        {selectedDoctor && (
+          <div>
+            <label>Date:</label>
+            <input type="date" value={selectedDate} onChange={handleDateChange} />
+          </div>
+        )}
+        {selectedDate && (
+          <div>
+            <label>Time Slot:</label>
+            <select value={selectedTimeSlot} onChange={handleTimeSlotChange}>
+              <option value="">Select a time slot</option>
+              {timeSchedules.map(timeSchedule => (
+                <option key={timeSchedule.id} value={timeSchedule.time}>{timeSchedule.time}</option>
               ))}
-          </select>
-        </div>
-        <div>
-          <label>Date:</label>
-          <input type="date" value={selectedDate} onChange={handleDateChange} />
-        </div>
-        <div>
-          <label>Time Slot:</label>
-          <select value={selectedTimeSlot} onChange={handleTimeSlotChange}>
-            <option value="">Select a time slot</option>
-            {timeSchedules.map(timeSchedule => (
-              <option key={timeSchedule.id} value={timeSchedule.time}>{timeSchedule.time}</option>
-            ))}
-          </select>
-        </div>
+            </select>
+          </div>
+        )}
         <div>
           <label>Status:</label>
           <input type="text" value={status} onChange={handleStatusChange} />
