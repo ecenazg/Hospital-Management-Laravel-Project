@@ -5,15 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TimeSchedule extends Model
+class Location extends Model
 {
     use HasFactory;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var string[]
+     */
     protected $fillable = [
-        'week_day','week_num','start_time','end_time','duration','user_id',
+        'name',
+        'short_address',
+        'type',
     ];
 
-    public function user(){
+    public function users()
+    {
         return $this->belongsTo(User::class);
     }
-
 }

@@ -7,20 +7,22 @@ use Illuminate\Database\Eloquent\Model;
 
 class Appointment extends Model
 {
-    use HasFactory;
     protected $fillable = [
-        'patient_id','doctor_id','department_id','date','time','status','notes'
+        'patient_id', 'location_id', 'date', 'time', 'visited', 'type',
     ];
 
-    public function department(){
-        return $this->belongsTo(Department::class);
+    public function patient()
+    {
+        return $this->belongsTo(Patient::class);
     }
 
-    public function doctors(){
-        return $this->belongsTo(Users::class);
+    public function location()
+    {
+        return $this->belongsTo(Location::class);
     }
 
-    public function patients(){
-        return $this->belongsTo(Users::class);
+    public function visit()
+    {
+        return $this->hasOne(Visit::class);
     }
 }

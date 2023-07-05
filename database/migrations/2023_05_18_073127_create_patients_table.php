@@ -14,7 +14,13 @@ return new class extends Migration
         $table ='patients';
         Schema::create($table, function (Blueprint $table) {
             $table->id();
+            $table->string('patient_id')->unique();
             $table -> string('name');
+            $table->string('phone_number');
+            $table->string('location')->nullable();
+            $table->year('year_of_birth')->nullable();
+            $table->unsignedInteger('visit_count')->default(0);
+            $table->timestamp('last_visit')->useCurrent();
             $table->string('email');
             $table->string('illness');
             $table->string('test');

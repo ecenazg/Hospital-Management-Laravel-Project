@@ -15,7 +15,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\TimeScheduleController;
 
-/*
+
 Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
 Route::get('/appointments/create', [AppointmentController::class, 'create'])->name('appointments.create');
 Route::post('/appointments', [AppointmentController::class, 'store'])->name('appointments.store');
@@ -24,14 +24,7 @@ Route::get('/appointments/{appointment}/edit', [AppointmentController::class, 'e
 Route::put('/appointments/{appointment}', [AppointmentController::class, 'update'])->name('appointments.update');
 Route::delete('/appointments/{appointment}', [AppointmentController::class, 'destroy'])->name('appointments.destroy');
 
-// Time Schedule Routes
-Route::get('/time-schedules', [TimeScheduleController::class, 'index'])->name('time_schedules.index');
-Route::get('/time-schedules/create', [TimeScheduleController::class, 'create'])->name('time_schedules.create');
-Route::post('/time-schedules', [TimeScheduleController::class, 'store'])->name('time_schedules.store');
-Route::get('/time-schedules/{timeSchedule}/edit', [TimeScheduleController::class, 'edit'])->name('time_schedules.edit');
-Route::put('/time-schedules/{timeSchedule}', [TimeScheduleController::class, 'update'])->name('time_schedules.update');
-Route::delete('/time-schedules/{timeSchedule}', [TimeScheduleController::class, 'destroy'])->name('time_schedules.destroy');
-*/
+
 Route::get('/contact', [ContactController::class, 'create'])->name('contact.create');
 //Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 

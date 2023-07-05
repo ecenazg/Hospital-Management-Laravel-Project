@@ -12,16 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('appointments', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->integer('patient_id');
-            $table->integer('doctor_id');
-            $table->integer('department_id');
+            $table->id();
+            $table->foreignId('patient_id');
+            $table->foreignId('location_id');
+            $table->string('type', 100);
             $table->date('date');
-            $table->time('time');
-            $table->string('status');
-            $table->string('notes')->nullable();
+            $table->time('time')->nullable();
+            $table->boolean('visited')->default(0);
+            
+
+            $table->index('location_id');
+            $table->index('patient_id');
             $table->timestamps();
-        });;
+        });
     }
 
     /**

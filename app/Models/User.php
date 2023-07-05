@@ -3,36 +3,38 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var string[]
      */
     protected $fillable = [
-        'name','email', 'password','national_id','birth_date','phone','blood_group','type'
+        'name',
+        'email',
+        'password',
+        'role',
     ];
 
     /**
-     * The attributes that should be hidden for arrays.
+     * The attributes that should be hidden for serialization.
      *
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
     ];
 
     /**
-     * The attributes that should be cast to native types.
+     * The attributes that should be cast.
      *
      * @var array
      */
@@ -40,20 +42,13 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-
-    
-    public function departments(){
-        return $this->belongsToMany(Department::class);
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
     }
 
-    public function appointments(){
-        return $this->hasMany(Appointment::class);
-    }
-
-
-
-    // Short Cuts
-    public function hasDepartment($departmentId){
-        return in_array($departmentId,$this->departments->pluck('id')->toArray());
+    public function location()
+    {
+        return $this->belongsToMany(Location::class, 'location_users');
     }
 }

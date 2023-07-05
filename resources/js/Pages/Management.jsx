@@ -1,160 +1,170 @@
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { Inertia } from '@inertiajs/inertia';
-import Navbar from './Navbar';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-const Management = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
-  const [selectedStaff, setSelectedStaff] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
+const Appointment = () => {
+  const [patients, setPatients] = useState([]);
+  const [doctors, setDoctors] = useState([]);
+  const [departments, setDepartments] = useState([]);
+  const [timeSchedules, setTimeSchedules] = useState([]);
+  const [selectedDepartment, setSelectedDepartment] = useState('');
+  const [selectedDoctor, setSelectedDoctor] = useState('');
+  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState('');
+  const [status, setStatus] = useState('');
+  const [notes, setNotes] = useState('');
 
-  const handleCreateDoctor = async (data) => {
-    try {
-      await Inertia.post('/create-doctor', data);
-      setSuccessMessage('Doctor created successfully.');
-    } catch (error) {
-      console.error(error);
-      setSuccessMessage('Failed to create doctor.');
-    }
+  useEffect(() => {
+    // Fetch patients
+    axios.get('/api/patients')
+      .then(response => {
+        setPatients(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching patients:', error);
+      });
+
+    // Fetch doctors
+    axios.get('/api/doctors')
+      .then(response => {
+        setDoctors(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching doctors:', error);
+      });
+
+    // Fetch departments
+    axios.get('/api/departments')
+      .then(response => {
+        setDepartments(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching departments:', error);
+      });
+
+    // Fetch time schedules
+    axios.get('/api/time-schedules')
+      .then(response => {
+        setTimeSchedules(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching time schedules:', error);
+      });
+  }, []);
+
+  const handleDepartmentChange = (event) => {
+    setSelectedDepartment(event.target.value);
+    setSelectedDoctor('');
   };
 
-  const handleCreateNurse = async (data) => {
-    try {
-      await Inertia.post('/create-nurse', data);
-      setSuccessMessage('Nurse created successfully.');
-    } catch (error) {
-      console.error(error);
-      setSuccessMessage('Failed to create nurse.');
-    }
+  const handleDoctorChange = (event) => {
+    setSelectedDoctor(event.target.value);
   };
 
-  const handleCreatePatient = async (data) => {
-    try {
-      await Inertia.post('/create-patient', data);
-      setSuccessMessage('Patient created successfully.');
-    } catch (error) {
-      console.error(error);
-      setSuccessMessage('Failed to create patient.');
-    }
+  const handleDateChange = (event) => {
+    setSelectedDate(event.target.value);
   };
 
-  const handleSelectionChange = (e) => {
-    setSelectedStaff(e.target.value);
-    setSuccessMessage(''); // Clear success message when staff selection changes
+  const handleTimeSlotChange = (event) => {
+    setSelectedTimeSlot(event.target.value);
+  };
+
+  const handleStatusChange = (event) => {
+    setStatus(event.target.value);
+  };
+
+  const handleNotesChange = (event) => {
+    setNotes(event.target.value);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    // Create the appointment
+    axios.post('/api/appointments', {
+      patient: selectedPatient,
+      doctor: selectedDoctor,
+      department: selectedDepartment,
+      date: selectedDate,
+      timeSlots: selectedTimeSlot,
+      status,
+      notes
+    })
+      .then(response => {
+        // Handle success
+        console.log('Appointment created successfully:', response.data);
+        // Redirect or display success message
+      })
+      .catch(error => {
+        // Handle error
+        console.error('Error creating appointment:', error);
+        // Display error message
+      });
   };
 
   return (
     <div>
-      <Navbar />
-      <h1>Management</h1>
-
-      <div className="flex">
-        <div className="w-full">
-          <div className="md:col-span-5">
-            <select className="select select-bordered w-full max-w-xs" value={selectedStaff} onChange={handleSelectionChange}>
-              <option disabled value="">Which staff do you want to add employees to?</option>
-              <option value="doctors">Doctors</option>
-              <option value="nurses">Nurses</option>
-              <option value="patients">Patients</option>
+      <h1>Create Appointment</h1>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Patient:</label>
+          <select>
+            <option value="">Select a patient</option>
+            {patients.map(patient => (
+              <option key={patient.id} value={patient.id}>{patient.name}</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label>Department:</label>
+          <select value={selectedDepartment} onChange={handleDepartmentChange}>
+            <option value="">Select a department</option>
+            {departments.map(department => (
+              <option key={department.id} value={department.id}>{department.name}</option>
+            ))}
+          </select>
+        </div>
+        {selectedDepartment && (
+          <div>
+            <label>Doctor:</label>
+            <select value={selectedDoctor} onChange={handleDoctorChange}>
+              <option value="">Select a doctor</option>
+              {doctors
+                .filter(doctor => doctor.department_id === selectedDepartment)
+                .map(doctor => (
+                  <option key={doctor.id} value={doctor.id}>{doctor.name}</option>
+                ))}
             </select>
           </div>
-          {selectedStaff === 'doctors' && (
-            <div className="w-1/3">
-              <h2>Create Doctor</h2>
-              <div className="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
-                <form onSubmit={handleSubmit(handleCreateDoctor)}>
-                  <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
-                    <div className="md:col-span-5">
-                      <label htmlFor="name">Name:</label>
-                      <input type="text" {...register('name', { required: true })} className="input input-bordered input-primary rounded-lg" />
-                      {errors.name && <span>This field is required</span>}
-                    </div>
-                    <div className="md:col-span-5">
-                      <label htmlFor="email">Email:</label>
-                      <input type="text" {...register('email', { required: true })} className="input input-bordered input-primary rounded-lg" />
-                      {errors.email && <span>This field is required</span>}
-                    </div>
-                    <div className="md:col-span-5">
-                      <label htmlFor="specialization">Specialization:</label>
-                      <input type="text" {...register('specialization', { required: true })} className="input input-bordered input-primary rounded-lg" />
-                      {errors.specialization && <span>This field is required</span>}
-                    </div>
-                    <div className="md:col-span-5">
-                      <label htmlFor="department_name">Department Name:</label>
-                      <input type="text" {...register('department_name', { required: true })} className="input input-bordered input-primary rounded-lg" />
-                      {errors.department_name && <span>This field is required</span>}
-                    </div>
-                    <div className="md:col-span-5">
-                      <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Create Doctor</button>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
-          )}
-          {selectedStaff === 'nurses' && (
-            <div className="w-1/3">
-              <h2>Create Nurse</h2>
-              <div className="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
-                <form onSubmit={handleSubmit(handleCreateNurse)}>
-                  <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
-                    <div className="md:col-span-5">
-                      <label htmlFor="name">Name:</label>
-                      <input type="text" {...register('name', { required: true })} className="input input-bordered input-primary rounded-lg" />
-                      {errors.name && <span>This field is required</span>}
-                    </div>
-                    <div className="md:col-span-5">
-                      <label htmlFor="email">Email:</label>
-                      <input type="text" {...register('email', { required: true })} className="input input-bordered input-primary rounded-lg" />
-                      {errors.email && <span>This field is required</span>}
-                    </div>
-                    <div className="md:col-span-5">
-                      <label htmlFor="department_name">Department Name:</label>
-                      <input type="text" {...register('department_name', { required: true })} className="input input-bordered input-primary rounded-lg" />
-                      {errors.department_name && <span>This field is required</span>}
-                    </div>
-                    <div className="md:col-span-5">
-                      <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Create Nurse</button>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
-          )}
-          {selectedStaff === 'patients' && (
-            <div className="w-1/3">
-              <h2>Create Patient</h2>
-              <div className="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
-                <form onSubmit={handleSubmit(handleCreatePatient)}>
-                  <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
-                    <div className="md:col-span-5">
-                      <label htmlFor="name">Name:</label>
-                      <input type="text" {...register('name', { required: true })} className="input input-bordered input-primary rounded-lg" />
-                      {errors.name && <span>This field is required</span>}
-                    </div>
-                    <div className="md:col-span-5">
-                      <label htmlFor="email">Email:</label>
-                      <input type="text" {...register('email', { required: true })} className="input input-bordered input-primary rounded-lg" />
-                      {errors.email && <span>This field is required</span>}
-                    </div>
-                    <div className="md:col-span-5">
-                      <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Create Patient</button>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
-          )}
+        )}
+        {selectedDoctor && (
+          <div>
+            <label>Date:</label>
+            <input type="date" value={selectedDate} onChange={handleDateChange} />
+          </div>
+        )}
+        {selectedDate && (
+          <div>
+            <label>Time Slot:</label>
+            <select value={selectedTimeSlot} onChange={handleTimeSlotChange}>
+              <option value="">Select a time slot</option>
+              {timeSchedules.map(timeSchedule => (
+                <option key={timeSchedule.id} value={timeSchedule.time}>{timeSchedule.time}</option>
+              ))}
+            </select>
+          </div>
+        )}
+        <div>
+          <label>Status:</label>
+          <input type="text" value={status} onChange={handleStatusChange} />
         </div>
-      </div>
-
-      {successMessage && (
-        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-4" role="alert">
-          <span className="block sm:inline">{successMessage}</span>
+        <div>
+          <label>Notes:</label>
+          <textarea value={notes} onChange={handleNotesChange} />
         </div>
-      )}
+        <button type="submit">Create Appointment</button>
+      </form>
     </div>
   );
 };
 
-export default Management;
+export default Appointment;
