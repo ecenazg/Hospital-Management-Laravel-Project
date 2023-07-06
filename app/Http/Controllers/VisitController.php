@@ -33,10 +33,14 @@ class VisitController extends Controller
         ]);
 
         $visit = Visit::findOrFail($postData['visit_id']);
-        $visit->problems = $postData['problems'];
-        $visit->prescription = $postData['prescription'];
-        $visit->is_complete = 1;
-        $visit->save();
+
+        $visit->update([
+            'problems' => $postData['problems'],
+            'prescription' => $postData['prescription'],
+            'is_complete' => 1
+        ]);
+
+
 
         return redirect()->route('doctor.dashboard');
     }
