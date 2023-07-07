@@ -13,7 +13,7 @@ class Appointment extends Model
 
     public function patient()
     {
-        return $this->belongsTo(Patient::class);
+        return $this->belongsTo(Patients::class);
     }
 
     public function location()

@@ -13,16 +13,16 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\TechnologyController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AppointmentController;
-use App\Http\Controllers\TimeScheduleController;
 
 
-Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
-Route::get('/appointments/create', [AppointmentController::class, 'create'])->name('appointments.create');
-Route::post('/appointments', [AppointmentController::class, 'store'])->name('appointments.store');
-Route::get('/appointments/{appointment}', [AppointmentController::class, 'show'])->name('appointments.show');
-Route::get('/appointments/{appointment}/edit', [AppointmentController::class, 'edit'])->name('appointments.edit');
-Route::put('/appointments/{appointment}', [AppointmentController::class, 'update'])->name('appointments.update');
-Route::delete('/appointments/{appointment}', [AppointmentController::class, 'destroy'])->name('appointments.destroy');
+    Route::get('appointments', [AppointmentController::class, 'index'])->name('appointments.list');
+    Route::get('appointments/add', [AppointmentController::class, 'add'])->name('appointments.add');
+    Route::get('appointments/book/{patient}', [AppointmentController::class, 'book'])->name('appointments.book');
+    Route::post('appointments/confirm', [AppointmentController::class, 'confirm'])->name('appointments.confirm');
+    Route::get('appointments/{appointment}', [AppointmentController::class, 'view'])->name('appointments.view');
+
+    Route::post('visit/confirm', [VisitConfirmController::class, 'store'])->name('visit.confirm');
+
 
 
 Route::get('/contact', [ContactController::class, 'create'])->name('contact.create');

@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Appointment;
-use App\Models\Patient;
+use App\Models\Patients;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,7 +17,7 @@ class CreateVisitsTable extends Migration
     {
         Schema::create('visits', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Patient::class);
+            $table->foreignIdFor(Patients::class);
             $table->foreignIdFor(Appointment::class);
             $table->text('problems');
             $table->text('prescription');

@@ -13,7 +13,6 @@ class AppointmentService
                 $query->select([
                     'id',
                     'name',
-                    'weight',
                     'phone_number',
                     'patient_id',
                 ]);

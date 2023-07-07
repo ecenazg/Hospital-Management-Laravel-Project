@@ -18,6 +18,7 @@ class Patients extends Model
         'year_of_birth',
         'visit_count',
         'last_visit',
+        'phone_number',
         'illness',
         'email',
         'test',
