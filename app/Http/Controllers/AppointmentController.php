@@ -20,11 +20,14 @@ class AppointmentController extends Controller
     }
 
     public function index()
-    {
-        $appointments = $this->appointmentService->getAppointments(false, false);
-        return Inertia::render('Appointments')
-            ->with('appointments', $appointments);
-    }
+{
+    $appointments = $this->appointmentService->getAppointments(false, false);
+    //dd($appointments);
+    return Inertia::render('Appointments')
+        ->with('appointments', $appointments); // Pass the paginator directly
+}
+
+
 
     public function view(Appointment $appointment)
     {

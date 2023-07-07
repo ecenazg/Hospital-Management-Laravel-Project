@@ -9,6 +9,9 @@ use Inertia\Inertia;
 
 class ContactController extends Controller
 {
+    public function index(){
+        return Inertia::render('Contact');
+    }
     public function create(Request $request)
     {
         $request->validate([
@@ -19,7 +22,7 @@ class ContactController extends Controller
         ]);
 
         $contact = Contact::create($request->only('name', 'email', 'message'));
-        dd(1);
+        
         
         return Inertia::render('Contact');
     }

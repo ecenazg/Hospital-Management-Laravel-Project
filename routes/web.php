@@ -15,17 +15,17 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AppointmentController;
 
 
-    Route::get('appointments', [AppointmentController::class, 'index'])->name('appointments.list');
-    Route::get('appointments/add', [AppointmentController::class, 'add'])->name('appointments.add');
-    Route::get('appointments/book/{patient}', [AppointmentController::class, 'book'])->name('appointments.book');
-    Route::post('appointments/confirm', [AppointmentController::class, 'confirm'])->name('appointments.confirm');
-    Route::get('appointments/{appointment}', [AppointmentController::class, 'view'])->name('appointments.view');
+Route::get('appointments', [AppointmentController::class, 'index'])->name('appointments.list');
+Route::get('appointments/add', [AppointmentController::class, 'add'])->name('appointments.add');
+Route::get('appointments/book/{patient}', [AppointmentController::class, 'book'])->name('appointments.book');
+Route::post('appointments/confirm', [AppointmentController::class, 'confirm'])->name('appointments.confirm');
+Route::get('appointments/{appointment}', [AppointmentController::class, 'view'])->name('appointments.view');
 
-    Route::post('visit/confirm', [VisitConfirmController::class, 'store'])->name('visit.confirm');
+Route::post('visit/confirm', [VisitConfirmController::class, 'store'])->name('visit.confirm');
 
 
 
-Route::get('/contact', [ContactController::class, 'create'])->name('contact.create');
+Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
 //Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
 Route::get('/laboratory', [LaboratoryController::class, 'index'])->name('laboratory.index');
@@ -51,7 +51,7 @@ Route::get('/doctors', [DoctorController::class, 'index'])
     ->name('doctors.index')
     ->middleware('auth');
 
-    Route::post('/doctors/{id}', [DoctorController::class, 'edit'])
+Route::post('/doctors/{id}', [DoctorController::class, 'edit'])
     ->name('doctors.edit')
     ->middleware('auth');
 
@@ -109,4 +109,3 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__ . '/auth.php';
-?>

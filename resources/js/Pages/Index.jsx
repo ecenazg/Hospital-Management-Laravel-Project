@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Slide } from "react-slideshow-image";
-import Patients from './Patients';
+import Patients from "./Patients";
 
 const Menu = () => {
     return (
@@ -187,7 +187,7 @@ const NavBar = () => {
                         >
                             Technologies
                         </a>
-                        
+
                         <a
                             href="/contact"
                             className="mt-3 text-gray-600 hover:underline sm:mx-3 sm:mt-0"
