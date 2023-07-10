@@ -29,11 +29,12 @@ class AppointmentController extends Controller
 
 
 
-    public function view(Appointment $appointment)
-    {
-        return Inertia::render('AppointmentView')
-            ->with('appointment', $appointment);
-    }
+public function view(Appointment $appointment)
+{
+    return Inertia::render('AppointmentView')
+        ->with('appointment', $appointment);
+}
+
 
     public function add(Request $request)
     {

@@ -1,6 +1,7 @@
 import React from "react";
 
 const AppointmentView = ({ appointment }) => {
+    console.log(appointment);
     return (
         <div>
             <h1>Appointment Details</h1>
